@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 import {
   logInWithEmailAndPassword,
@@ -8,6 +8,7 @@ import {
 } from "@/services/firebase";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import LoginModal from "@/components/LoginModal";
 
 export default function Home() {
     const user = useContext(FirebaseAuthContext);
@@ -42,7 +43,7 @@ export default function Home() {
             <h2>Sign In</h2>
 
             <main>
-                <TextField
+                {/* <TextField
                     label="Email"
                     id="email"
                     type="email"
@@ -58,7 +59,7 @@ export default function Home() {
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     variant="outlined"
-                />
+                /> */}
 
                 <br/> {/* Delete this later when styles are applied. */}
 
@@ -76,6 +77,12 @@ export default function Home() {
                     Sign Up
                 </Button>
             </main>
+
+            <LoginModal>
+                <h3>Welcome Back</h3>
+
+
+            </LoginModal>
         </div>
     );
 }

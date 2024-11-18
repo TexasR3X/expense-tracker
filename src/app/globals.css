@@ -35,6 +35,15 @@ a {
   text-decoration: none;
 }
 
+.modal-box {
+  position: fixed;
+  /* left: 50%; */
+  /* transform: translate(-200px, -200px); */
+  width: 400px;
+  background-color: #fff;
+  padding: 1.5rem;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
