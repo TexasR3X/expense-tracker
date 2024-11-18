@@ -31,23 +31,29 @@ export const initializeFirebase = () => {
 // const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 
-export const logInWithEmailAndPassword = async (email, password) => {
+export const loginWithEmailAndPassword = async (email, password) => {
     try {
+        console.log("Logging In!");
         const auth = getAuth();
+        console.log("auth:", auth);
         await signInWithEmailAndPassword(auth, email, password);
     }
     catch (error) {
-        console.error("There was an error!");
+        console.error("There was an error in loginWithEmailAndPassword! :)");
+        console.log("error:", error);
     }
 }
 
 export const signUpWithEmailAndPassword = async (email, password) => {
     try {
+        console.log("Signing Up!");
         const auth = getAuth();
+        console.log("auth:", auth);
         await createUserWithEmailAndPassword(auth, email, password);
     }
     catch (error) {
-        console.error("There was an error!");
+        console.error("There was an error in signUpWithEmailAndPassword! :)");
+        console.log("error:", error);
     }
 }
 

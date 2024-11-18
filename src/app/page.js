@@ -11,27 +11,65 @@ export default function Home() {
     const user = useContext(FirebaseAuthContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    // login = is logged in
+    // login = true => User is logging in.
+    // login = false => User is signing up.
     const [login, setLogin] = useState(false);
-    
+
+    const handleLogin = useCallback(async () => {
+        // If either the email or password are "" stop this code.
+        console.log("email:", email);
+        if (!email || !password) return;
+
+        // If logging in
+        if (login) {
+            await loginWithEmailAndPassword(email, password);
+            console.log("The user is logged in.");
+        }
+        // If signing up
+        else {
+            await signUpWithEmailAndPassword(email, password);
+            console.log("The user signed up.");
+        }
+    }, [email, password, login]);
 
     return (
         <div>
             <h1>Expense Tracker</h1>
+            <h2>Sign In</h2>
 
             <main>
-                <label>Email:</label>
-                <input type="email"/>
+                <label>
+                    Email:
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={(event) => {
+                            setEmail(event.target.value);
+                        }}
+                    />
+                </label>
+                
+                <label>
+                    Password:
+                    <input
+                        type="password"
+                        onChange={(event) => {
+                            setPassword(event.target.value);
+                        }}
+                    />
+                </label>
 
-                <label>Password:</label>
-                <input type="password"/>
+                <br/> {/* Delete this later when styles are applied. */}
 
-                <label>Re-enter Password:</label>
-                <input type="password"/>
+                <button onClick={handleLogin}>
+                    {login ? "Login In" : "Sign Up"}
+                </button>
 
-                <button>Submit</button>
+                <p>or</p>
 
-                <button>Create Acount</button>
+                <button onClick={() => setLogin(!login)}>
+                    {login ? "Create an account" : "Login"}
+                </button>
             </main>
         </div>
     );
