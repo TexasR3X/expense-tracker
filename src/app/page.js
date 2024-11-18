@@ -6,6 +6,8 @@ import {
   logout,
   signUpWithEmailAndPassword,
 } from "@/services/firebase";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
 
 export default function Home() {
     const user = useContext(FirebaseAuthContext);
@@ -38,18 +40,29 @@ export default function Home() {
             <h2>Sign In</h2>
 
             <main>
-                <label>
-                    Email:
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(event) => {
-                            setEmail(event.target.value);
-                        }}
-                    />
-                </label>
+                <TextField
+                    label="Email"
+                    id="email"
+                    type="email"
+                    onChange={(event) => setEmail(event.target.value)}
+                    variant="outlined"
+                />
+                {/* <input
+                    type="email"
+                    value={email}
+                    onChange={(event) => {
+                        setEmail(event.target.value);
+                    }}
+                /> */}
                 
-                <label>
+                <TextField
+                    label="Password"
+                    id="password"
+                    type="password"
+                    onChange={(event) => setPassword(event.target.value)}
+                    variant="outlined"
+                />
+                {/* <label>
                     Password:
                     <input
                         type="password"
@@ -57,19 +70,25 @@ export default function Home() {
                             setPassword(event.target.value);
                         }}
                     />
-                </label>
+                </label> */}
 
                 <br/> {/* Delete this later when styles are applied. */}
 
-                <button onClick={handleLogin}>
+                <Button
+                    variant="contained"
+                    onClick={handleLogin}
+                >
                     {login ? "Login In" : "Sign Up"}
-                </button>
+                </Button>
 
                 <p>or</p>
 
-                <button onClick={() => setLogin(!login)}>
+                <Button
+                    variant="contained"
+                    onClick={() => setLogin(!login)}
+                >
                     {login ? "Create an account" : "Login"}
-                </button>
+                </Button>
             </main>
         </div>
     );
