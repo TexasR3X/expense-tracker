@@ -31,7 +31,7 @@ export const initializeFirebase = () => {
 // const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 
-export const loginWithEmailAndPassword = async (email, password) => {
+export const logInWithEmailAndPassword = async (email, password) => {
     try {
         console.log("Logging In!");
         const auth = getAuth();
@@ -39,7 +39,7 @@ export const loginWithEmailAndPassword = async (email, password) => {
         await signInWithEmailAndPassword(auth, email, password);
     }
     catch (error) {
-        console.error("There was an error in loginWithEmailAndPassword! :)");
+        console.error("There was an error in logInWithEmailAndPassword! :)");
         console.log("error:", error);
     }
 }

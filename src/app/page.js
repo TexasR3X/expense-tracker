@@ -2,7 +2,7 @@
 import { useCallback, useContext, useState } from "react";
 import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 import {
-  loginWithEmailAndPassword,
+  logInWithEmailAndPassword,
   logout,
   signUpWithEmailAndPassword,
 } from "@/services/firebase";
@@ -13,30 +13,16 @@ export default function Home() {
     const user = useContext(FirebaseAuthContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    // // login = true => User is logging in.
-    // // login = false => User is signing up.
-    // const [login, setLogin] = useState(false);
 
     const handleLogin = useCallback(async () => {
         // If either the email or password are "" this function stops.
         console.log("email:", email);
         if (!email || !password) return;
 
-        await loginWithEmailAndPassword(email, password);
+        await logInWithEmailAndPassword(email, password);
         setPassword("");
         setEmail("");
         console.log("The user is logged in.");
-
-        // // If logging in
-        // if (login) {
-        //     await loginWithEmailAndPassword(email, password);
-        //     console.log("The user is logged in.");
-        // }
-        // // If signing up
-        // else {
-        //     await signUpWithEmailAndPassword(email, password);
-        //     console.log("The user signed up.");
-        // }
     }, [email, password/*, login*/]);
 
     const handleSignUp = useCallback(async () => {
@@ -64,13 +50,6 @@ export default function Home() {
                     onChange={(event) => setEmail(event.target.value)}
                     variant="outlined"
                 />
-                {/* <input
-                    type="email"
-                    value={email}
-                    onChange={(event) => {
-                        setEmail(event.target.value);
-                    }}
-                /> */}
                 
                 <TextField
                     label="Password"
@@ -80,23 +59,14 @@ export default function Home() {
                     onChange={(event) => setPassword(event.target.value)}
                     variant="outlined"
                 />
-                {/* <label>
-                    Password:
-                    <input
-                        type="password"
-                        onChange={(event) => {
-                            setPassword(event.target.value);
-                        }}
-                    />
-                </label> */}
 
                 <br/> {/* Delete this later when styles are applied. */}
 
                 <Button
-                    variant="contained"
+                    variant="outlined"
                     onClick={handleLogin}
                 >
-                    Login
+                    Log In
                 </Button>
 
                 <Button
@@ -105,22 +75,6 @@ export default function Home() {
                 >
                     Sign Up
                 </Button>
-
-                {/* <Button
-                    variant="contained"
-                    onClick={handleLogin}
-                >
-                    {login ? "Login In" : "Sign Up"}
-                </Button>
-
-                <p>or</p>
-
-                <Button
-                    variant="contained"
-                    onClick={() => setLogin(!login)}
-                >
-                    {login ? "Create an account" : "Login"}
-                </Button> */}
             </main>
         </div>
     );
