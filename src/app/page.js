@@ -13,26 +13,42 @@ export default function Home() {
     const user = useContext(FirebaseAuthContext);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    // login = true => User is logging in.
-    // login = false => User is signing up.
-    const [login, setLogin] = useState(false);
+    // // login = true => User is logging in.
+    // // login = false => User is signing up.
+    // const [login, setLogin] = useState(false);
 
     const handleLogin = useCallback(async () => {
-        // If either the email or password are "" stop this code.
+        // If either the email or password are "" this function stops.
         console.log("email:", email);
         if (!email || !password) return;
 
-        // If logging in
-        if (login) {
-            await loginWithEmailAndPassword(email, password);
-            console.log("The user is logged in.");
-        }
-        // If signing up
-        else {
-            await signUpWithEmailAndPassword(email, password);
-            console.log("The user signed up.");
-        }
-    }, [email, password, login]);
+        await loginWithEmailAndPassword(email, password);
+        setPassword("");
+        setEmail("");
+        console.log("The user is logged in.");
+
+        // // If logging in
+        // if (login) {
+        //     await loginWithEmailAndPassword(email, password);
+        //     console.log("The user is logged in.");
+        // }
+        // // If signing up
+        // else {
+        //     await signUpWithEmailAndPassword(email, password);
+        //     console.log("The user signed up.");
+        // }
+    }, [email, password/*, login*/]);
+
+    const handleSignUp = useCallback(async () => {
+        // If either the email or password are "" this function stops.
+        console.log("email:", email);
+        if (!email || !password) return;
+
+        await signUpWithEmailAndPassword(email, password);
+        setPassword("");
+        setEmail("");
+        console.log("The user is signed in.");
+    }, [email, password]);
 
     return (
         <div>
@@ -44,6 +60,7 @@ export default function Home() {
                     label="Email"
                     id="email"
                     type="email"
+                    value={email}
                     onChange={(event) => setEmail(event.target.value)}
                     variant="outlined"
                 />
@@ -59,6 +76,7 @@ export default function Home() {
                     label="Password"
                     id="password"
                     type="password"
+                    value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     variant="outlined"
                 />
@@ -78,6 +96,20 @@ export default function Home() {
                     variant="contained"
                     onClick={handleLogin}
                 >
+                    Login
+                </Button>
+
+                <Button
+                    variant="contained"
+                    onClick={handleSignUp}
+                >
+                    Sign Up
+                </Button>
+
+                {/* <Button
+                    variant="contained"
+                    onClick={handleLogin}
+                >
                     {login ? "Login In" : "Sign Up"}
                 </Button>
 
@@ -88,7 +120,7 @@ export default function Home() {
                     onClick={() => setLogin(!login)}
                 >
                     {login ? "Create an account" : "Login"}
-                </Button>
+                </Button> */}
             </main>
         </div>
     );
