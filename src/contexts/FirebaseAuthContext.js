@@ -1,5 +1,5 @@
 "use client";
-import { initializeFirebase } from "@/services/firebase";
+import { initializeFirebase, logout } from "@/services/firebase";
 import { createContext, useEffect, useState } from "react";
 import { getAuth } from "firebase/auth";
 
@@ -15,6 +15,9 @@ export default function FirebaseAuthProvider({ children }) {
         // This gets the authentication object that will allow the user to be logged in.
         const auth = getAuth();
 
+        // I should delete this or change it later. //...................................//
+        logout();
+
         // auth.onAuthStateChanged basically creates an event listener for when the user changes.
             // unsub = unsubscribe
             // auth.onAuthStateChanged also returns a function (unsub). When unsub is called, it will "unsubscribe" the
@@ -28,7 +31,7 @@ export default function FirebaseAuthProvider({ children }) {
 
         // Calling this function will delete the auth.onAuthStateChanged event listener.
         return unsub;
-    });
+    }, []);
 
     return <FirebaseAuthContext.Provider value={user}>{children}</FirebaseAuthContext.Provider>;
 }
