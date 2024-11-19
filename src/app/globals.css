@@ -37,6 +37,7 @@ a {
 
 .modal-box {
   position: fixed;
+  left: 3rem;
   /* left: 50%; */
   /* transform: translate(-200px, -200px); */
   width: 400px;

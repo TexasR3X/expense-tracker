@@ -81,7 +81,23 @@ export default function Home() {
             <LoginModal>
                 <h3>Welcome Back</h3>
 
+                <TextField
+                    label="Email"
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    variant="outlined"
+                />
 
+                <TextField
+                    label="Password"
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    variant="outlined"
+                />
             </LoginModal>
         </div>
     );
