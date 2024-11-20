@@ -37,10 +37,14 @@ export const logInWithEmailAndPassword = async (email, password) => {
         const auth = getAuth();
         console.log("auth:", auth);
         await signInWithEmailAndPassword(auth, email, password);
+
+        return null;
     }
     catch (error) {
         console.error("There was an error in logInWithEmailAndPassword! :)");
-        console.log("error:", error);
+        console.log("error =", error);
+
+        return error.message;
     }
 }
 
@@ -54,6 +58,8 @@ export const signUpWithEmailAndPassword = async (email, password) => {
     catch (error) {
         console.error("There was an error in signUpWithEmailAndPassword! :)");
         console.log("error:", error);
+
+        return error.message;
     }
 }
 
@@ -61,3 +67,10 @@ export const logout = async () => {
     const auth = getAuth();
     await auth.signOut();
 };
+
+export const FIRE_BASE_LOGIN_ERRORS = {
+    INVALID_CREDENTIAL: "Firebase: Error (auth/invalid-credential).",
+    INVALID_EMAIL: "Firebase: Error (auth/invalid-email).",
+    INVALID_PASSWORD: "Firebase: Password should be at least 6 characters (auth/weak-password).",
+    // MISSING_PASSWORD: "Firebase: Error (auth/missing-password).",
+}

@@ -1,11 +1,12 @@
 "use client";
-import { useContext, useRef } from "react";
+import { useContext, useState } from "react";
+import { FIRE_BASE_LOGIN_ERRORS, logInWithEmailAndPassword, signUpWithEmailAndPassword } from "@/services/firebase";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { CredsContext, CredsReducerContext, ACTIONS } from "@/contexts/CredsContext";
 import Button from "@mui/material/Button";
-import { logInWithEmailAndPassword, signUpWithEmailAndPassword } from "@/services/firebase";
+import Alert from "@mui/material/Alert";
+import { CredsContext, CredsReducerContext, ACTIONS } from "@/contexts/CredsContext";
 import If from "./logic-components/If";
 
 export const MODAL_TYPES = {
@@ -17,6 +18,7 @@ export const MODAL_TYPES = {
 export default function LoginModal({ type }) {
     const creds = useContext(CredsContext);
     const dispatchCreds = useContext(CredsReducerContext);
+    const [alertMessage, setAlertMessage] = useState(null);
 
     const handleUpdateEmail = (newEmail) => dispatchCreds({
         type: ACTIONS.UPDATE_EMAIL,
@@ -27,11 +29,36 @@ export default function LoginModal({ type }) {
         newPassword,
     });
     const handleLogin = async () => {
-        if (type === MODAL_TYPES.LOG_IN) {
-            logInWithEmailAndPassword(creds.email, creds.password);
+        if (!creds.email || !creds.password) setAlertMessage("You must fill out every field.");
+        else if (type === MODAL_TYPES.LOG_IN) {
+            const errorMessage = await logInWithEmailAndPassword(creds.email, creds.password);
+
+            switch (errorMessage) {
+                case FIRE_BASE_LOGIN_ERRORS.INVALID_EMAIL: {
+                    setAlertMessage("Invalid email entered");
+                    break;
+                }
+                case FIRE_BASE_LOGIN_ERRORS.INVALID_PASSWORD: {
+                    setAlertMessage("Invalid password entered");
+                    break;
+                }
+            }
         }
         else if (type === MODAL_TYPES.SIGN_UP){
-            signUpWithEmailAndPassword(creds.email, creds.password);
+            const errorMessage = await signUpWithEmailAndPassword(creds.email, creds.password);
+
+            console.log("errorMessage:", errorMessage);
+
+            switch (errorMessage) {
+                case FIRE_BASE_LOGIN_ERRORS.INVALID_EMAIL: {
+                    setAlertMessage("Invalid email entered.");
+                    break;
+                }
+                case FIRE_BASE_LOGIN_ERRORS.INVALID_PASSWORD: {
+                    setAlertMessage("Invalid password entered. Password needs to be at least six characters long.");
+                    break;
+                }
+            }
         }
     };
 
@@ -68,11 +95,26 @@ export default function LoginModal({ type }) {
 
             <br/> {/* I need to delete this <br/> tag later on. */}
 
-            <Button
-                variant="outlined"
-                onClick={handleLogin}
+            <Alert
+                severity="warning"
+                onClose={() => {}}
+                display={!alertMessage ? "block" : "none" }
             >
-                Log In
+                {alertMessage}
+            </Alert>
+
+            <br/> {/* I need to delete this <br/> tag later on. */}
+
+            <Button
+                variant="contained"
+                onClick={handleLogin}
+                disabled={!creds.email || !creds.password}
+            >
+                {
+                    type === MODAL_TYPES.LOG_IN ? "Log In" :
+                    type === MODAL_TYPES.SIGN_UP ? "Sign Up" :
+                    null
+                }
             </Button>
             </Box>
         </Modal>
