@@ -1,12 +1,12 @@
 "use client";
-import { useContext, useState } from "react";
+import { useContext, useReducer, useState } from "react";
 import { FIRE_BASE_LOGIN_ERRORS, logInWithEmailAndPassword, signUpWithEmailAndPassword } from "@/services/firebase";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
-import { CredsContext, CredsReducerContext, ACTIONS } from "@/contexts/CredsContext";
+// import { CredsContext, CredsReducerContext } from "@/contexts/CredsContext";
 import If from "./logic-components/If";
 
 export const MODAL_TYPES = {
@@ -14,22 +14,75 @@ export const MODAL_TYPES = {
     SIGN_UP: "SIGN_UP",
     NONE: "NONE",
 }
+const USER_DATA_ACTIONS = {
+    UPDATE_USER_NAME: "UPDATE_USER_NAME",
+    UPDATE_EMAIL: "UPDATE_EMAIL",
+    UPDATE_PASSWORD: "UPDATE_PASSWORD",
+    UPDATE_VERIFY_PASSWORD: "UPDATE_RE_ENTER_PASSWORD",
+}
 
 export default function LoginModal({ type }) {
-    const creds = useContext(CredsContext);
-    const dispatchCreds = useContext(CredsReducerContext);
+    // const creds = useContext(CredsContext);
+    // const dispatchCreds = useContext(CredsReducerContext);
+
+    const [userData, dispatchUserData] = useReducer(
+        (userData, action) => {
+            switch (action.type) {
+                case USER_DATA_ACTIONS.UPDATE_USER_NAME: {
+                    return {
+                        ...userData,
+                        userName: action.userName,
+                    }
+                }
+                case USER_DATA_ACTIONS.UPDATE_EMAIL: {
+                    return {
+                        ...userData,
+                        email: action.email,
+                    }
+                }
+                case USER_DATA_ACTIONS.UPDATE_PASSWORD: {
+                    return {
+                        ...userData,
+                        password: action.password,
+                    }
+                }
+                case USER_DATA_ACTIONS.UPDATE_RE_ENTER_PASSWORD: {
+                    return {
+                        ...userData,
+                        verifyPassword: action.verifyPassword,
+                    }
+                }
+            }
+        },
+        {
+            userName: type === MODAL_TYPES.SIGN_UP ? "" : null,
+            email: "",
+            password: "",
+            verifyPassword: type === MODAL_TYPES.SIGN_UP ? "" : null,
+        }
+    );
+
     const [alertMessage, setAlertMessage] = useState(null);
 
-    const handleUpdateEmail = (newEmail) => dispatchCreds({
-        type: ACTIONS.UPDATE_EMAIL,
-        newEmail,
+    const handleUpdateUserName = (userName) => dispatchUserData({
+        type: USER_DATA_ACTIONS.UPDATE_USER_NAME,
+        userName,
     });
-    const handleUpdatePassword = (newPassword) => dispatchCreds({
-        type: ACTIONS.UPDATE_PASSWORD,
-        newPassword,
+    const handleUpdateEmail = (email) => dispatchUserData({
+        type: USER_DATA_ACTIONS.UPDATE_EMAIL,
+        email,
     });
+    const handleUpdatePassword = (password) => dispatchUserData({
+        type: USER_DATA_ACTIONS.UPDATE_PASSWORD,
+        password,
+    });
+    const handleUpdateVerifyPassword = (verifyPassword) => dispatchUserData({
+        type: USER_DATA_ACTIONS.UPDATE_RE_ENTER_PASSWORD,
+        verifyPassword,
+    });
+
     const handleLogin = async () => {
-        if (!creds.email || !creds.password) setAlertMessage("You must fill out every field.");
+        if (!!!userData.email || !userData.password) setAlertMessage("You must fill out every field.");
         else if (type === MODAL_TYPES.LOG_IN) {
             const errorMessage = await logInWithEmailAndPassword(creds.email, creds.password);
 
@@ -74,12 +127,22 @@ export default function LoginModal({ type }) {
                 <If condition={type === MODAL_TYPES.SIGN_UP}>Sign Up</If>
             </h3>
             
+            <If condition={type === MODAL_TYPES.SIGN_UP}>
+                <TextField
+                    label="User Name"
+                    id="user-name"
+                    type="text"
+                    value={userData.userName}
+                    onChange={(event) => handleUpdateUserName(event.target.value)}
+                    variant="outlined"
+                />
+            </If>
 
             <TextField
                 label="Email"
                 id="email"
                 type="email"
-                value={creds.email}
+                value={userData.email}
                 onChange={(event) => handleUpdateEmail(event.target.value)}
                 variant="outlined"
             />
@@ -88,10 +151,21 @@ export default function LoginModal({ type }) {
                 label="Password"
                 id="password"
                 type="password"
-                value={creds.password}
+                value={userData.password}
                 onChange={(event) => handleUpdatePassword(event.target.value)}
                 variant="outlined"
             />
+
+            <If condition={type === MODAL_TYPES.SIGN_UP}>
+                <TextField
+                    label="Re-enter Password"
+                    id="verify-password"
+                    type="password"
+                    value={userData.verifyPassword}
+                    onChange={(event) => handleUpdateVerifyPassword(event.target.value)}
+                    variant="outlined"
+                />
+            </If>
 
             <br/> {/* I need to delete this <br/> tag later on. */}
 
@@ -108,7 +182,7 @@ export default function LoginModal({ type }) {
             <Button
                 variant="contained"
                 onClick={handleLogin}
-                disabled={!creds.email || !creds.password}
+                // disabled={!creds.email || !creds.password}
             >
                 {
                     type === MODAL_TYPES.LOG_IN ? "Log In" :
