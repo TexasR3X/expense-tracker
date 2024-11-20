@@ -5,9 +5,16 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { CredsContext, CredsReducerContext, ACTIONS } from "@/contexts/CredsContext";
 import Button from "@mui/material/Button";
-import { logInWithEmailAndPassword } from "@/services/firebase";
+import { logInWithEmailAndPassword, signUpWithEmailAndPassword } from "@/services/firebase";
+import If from "./logic-components/If";
 
-export default function LoginModal({ open, children }) {
+export const MODAL_TYPES = {
+    LOG_IN: "LOG_IN",
+    SIGN_UP: "SIGN_UP",
+    NONE: "NONE",
+}
+
+export default function LoginModal({ type }) {
     const creds = useContext(CredsContext);
     const dispatchCreds = useContext(CredsReducerContext);
 
@@ -20,17 +27,26 @@ export default function LoginModal({ open, children }) {
         newPassword,
     });
     const handleLogin = async () => {
-        console.log("creds.email:", creds.email);
-        logInWithEmailAndPassword(creds.email, creds.password);
+        if (type === MODAL_TYPES.LOG_IN) {
+            logInWithEmailAndPassword(creds.email, creds.password);
+        }
+        else if (type === MODAL_TYPES.SIGN_UP){
+            signUpWithEmailAndPassword(creds.email, creds.password);
+        }
     };
+
+    console.log("type:", type);
 
     return (
         <Modal
-            open={open}
-            // open={false}
+            open={type !== MODAL_TYPES.NONE}
         >
             <Box className="modal-box">
-            <h3>Welcome Back</h3>
+            <h3>
+                <If condition={type === MODAL_TYPES.LOG_IN}>Welcome Back</If>
+                <If condition={type === MODAL_TYPES.SIGN_UP}>Sign Up</If>
+            </h3>
+            
 
             <TextField
                 label="Email"
@@ -50,7 +66,7 @@ export default function LoginModal({ open, children }) {
                 variant="outlined"
             />
 
-            <br></br>
+            <br/> {/* I need to delete this <br/> tag later on. */}
 
             <Button
                 variant="outlined"

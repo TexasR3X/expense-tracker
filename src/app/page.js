@@ -7,29 +7,11 @@ import {
   signUpWithEmailAndPassword,
 } from "@/services/firebase";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import LoginModal from "@/components/LoginModal";
+import LoginModal, { MODAL_TYPES } from "@/components/LoginModal";
 
 export default function Home() {
     const user = useContext(FirebaseAuthContext);
-
-    // const [loginInfo, dispatchLogin] = useReducer(
-    //     (loginInfo, action) => {
-    //         switch (action.type) {
-    //             case "": {
-
-    //             }
-    //         }
-    //     },
-    //     {
-    //         email: "",
-    //         password: "",
-    //     }
-    // );
-
-    // const [email, setEmail] = useState("");
-    // const [password, setPassword] = useState("");
-    const [openLoginModal, setOpenLoginModal] = useState(false);
+    const [modalType, setModalType] = useState(MODAL_TYPES.NONE)
 
     // const handleLogin = useCallback(async () => {
     //     // If either the email or password are "" this function stops.
@@ -59,42 +41,22 @@ export default function Home() {
             <h2>Sign In</h2>
 
             <main>
-                {/* <TextField
-                    label="Email"
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                    variant="outlined"
-                />
-                
-                <TextField
-                    label="Password"
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                    variant="outlined"
-                /> */}
-
-                <br/> {/* Delete this later when styles are applied. */}
-
                 <Button
                     variant="outlined"
-                    onClick={() => setOpenLoginModal(true)}
+                    onClick={() => setModalType(MODAL_TYPES.LOG_IN)}
                 >
                     Log In
                 </Button>
 
                 <Button
                     variant="contained"
-                    // onClick={() => setOpenLoginModal(true)}
+                    onClick={() => setModalType(MODAL_TYPES.SIGN_UP)}
                 >
                     Sign Up
                 </Button>
             </main>
 
-            <LoginModal open={openLoginModal}/>
+            <LoginModal type={modalType}/>
         </div>
     );
 }
