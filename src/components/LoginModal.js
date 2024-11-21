@@ -100,7 +100,7 @@ export default function LoginModal({ type }) {
             showErrorAlert("You must fill out every field.");
             return;
         }
-        if (userData.password !== userData.verifyPassword) {
+        if (userData.password !== userData.verifyPassword && type === MODAL_TYPES.SIGN_UP) {
             showErrorAlert("Both passwords need to match. Please re-enter passwords.");
             return;
         }
@@ -110,6 +110,10 @@ export default function LoginModal({ type }) {
         else if (type === MODAL_TYPES.SIGN_UP) errorMessage = await signUpWithEmailAndPassword(userData.email, userData.password);
 
         switch (errorMessage) {
+            case FIRE_BASE_LOGIN_ERRORS.INVALID_CREDENTIAL: {
+                showErrorAlert("Incorrect email or password.");
+                break;
+            }
             case FIRE_BASE_LOGIN_ERRORS.INVALID_EMAIL: {
                 showErrorAlert("Invalid email entered.");
                 break;
