@@ -54,6 +54,8 @@ export const signUpWithEmailAndPassword = async (email, password) => {
         const auth = getAuth();
         console.log("auth:", auth);
         await createUserWithEmailAndPassword(auth, email, password);
+
+        return null;
     }
     catch (error) {
         console.error("There was an error in signUpWithEmailAndPassword! :)");
@@ -72,5 +74,5 @@ export const FIRE_BASE_LOGIN_ERRORS = {
     INVALID_CREDENTIAL: "Firebase: Error (auth/invalid-credential).",
     INVALID_EMAIL: "Firebase: Error (auth/invalid-email).",
     INVALID_PASSWORD: "Firebase: Password should be at least 6 characters (auth/weak-password).",
-    // MISSING_PASSWORD: "Firebase: Error (auth/missing-password).",
+    EMAIL_ALREADY_IN_USE: "Firebase: Error (auth/email-already-in-use).",
 }

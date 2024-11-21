@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useReducer, useState } from "react";
+import { useReducer, useState } from "react";
 import { FIRE_BASE_LOGIN_ERRORS, logInWithEmailAndPassword, signUpWithEmailAndPassword } from "@/services/firebase";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -12,7 +12,6 @@ import If from "./logic-components/If";
 export const MODAL_TYPES = {
     LOG_IN: "LOG_IN",
     SIGN_UP: "SIGN_UP",
-    NONE: "NONE",
 }
 const USER_DATA_ACTIONS = {
     UPDATE_USER_NAME: "UPDATE_USER_NAME",
@@ -61,7 +60,6 @@ export default function LoginModal({ type }) {
             verifyPassword: type === MODAL_TYPES.SIGN_UP ? "" : null,
         }
     );
-
     const [alertMessage, setAlertMessage] = useState(null);
 
     const handleUpdateUserName = (userName) => dispatchUserData({
@@ -82,44 +80,38 @@ export default function LoginModal({ type }) {
     });
 
     const handleLogin = async () => {
-        if (!!!userData.email || !userData.password) setAlertMessage("You must fill out every field.");
-        else if (type === MODAL_TYPES.LOG_IN) {
-            const errorMessage = await logInWithEmailAndPassword(creds.email, creds.password);
-
-            switch (errorMessage) {
-                case FIRE_BASE_LOGIN_ERRORS.INVALID_EMAIL: {
-                    setAlertMessage("Invalid email entered");
-                    break;
-                }
-                case FIRE_BASE_LOGIN_ERRORS.INVALID_PASSWORD: {
-                    setAlertMessage("Invalid password entered");
-                    break;
-                }
-            }
+        if ((userData.userName === "") || (userData.email === "") || (userData.password === "") || (userData.verifyPassword === "")) {
+            setAlertMessage("You must fill out every field.");
+            return;
         }
-        else if (type === MODAL_TYPES.SIGN_UP){
-            const errorMessage = await signUpWithEmailAndPassword(creds.email, creds.password);
+        
+        let errorMessage;
+        if (type === MODAL_TYPES.LOG_IN) errorMessage = await logInWithEmailAndPassword(userData.email, userData.password);
+        else if (type === MODAL_TYPES.SIGN_UP) errorMessage = await signUpWithEmailAndPassword(userData.email, userData.password);
 
-            console.log("errorMessage:", errorMessage);
+        console.log("errorMessage:", errorMessage);
 
-            switch (errorMessage) {
-                case FIRE_BASE_LOGIN_ERRORS.INVALID_EMAIL: {
-                    setAlertMessage("Invalid email entered.");
-                    break;
-                }
-                case FIRE_BASE_LOGIN_ERRORS.INVALID_PASSWORD: {
-                    setAlertMessage("Invalid password entered. Password needs to be at least six characters long.");
-                    break;
-                }
+        switch (errorMessage) {
+            case FIRE_BASE_LOGIN_ERRORS.INVALID_EMAIL: {
+                setAlertMessage("Invalid email entered.");
+                break;
+            }
+            case FIRE_BASE_LOGIN_ERRORS.INVALID_PASSWORD: {
+                setAlertMessage("Invalid password entered. Password needs to be at least six characters long.");
+                break;
+            }
+            case FIRE_BASE_LOGIN_ERRORS.EMAIL_ALREADY_IN_USE: {
+                setAlertMessage("This email is already being used.");
+                break;
             }
         }
     };
 
-    console.log("type:", type);
+
 
     return (
         <Modal
-            open={type !== MODAL_TYPES.NONE}
+            open={true} // I will change this later to make the modal closeable.
         >
             <Box className="modal-box">
             <h3>
@@ -172,7 +164,7 @@ export default function LoginModal({ type }) {
             <Alert
                 severity="warning"
                 onClose={() => {}}
-                display={!alertMessage ? "block" : "none" }
+                display={!!alertMessage ? "block" : "none"}
             >
                 {alertMessage}
             </Alert>
