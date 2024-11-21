@@ -18,6 +18,7 @@ const USER_DATA_ACTIONS = {
     UPDATE_EMAIL: "UPDATE_EMAIL",
     UPDATE_PASSWORD: "UPDATE_PASSWORD",
     UPDATE_VERIFY_PASSWORD: "UPDATE_RE_ENTER_PASSWORD",
+    CLEAR_PASSWORDS: "CLEAR_PASSWORDS",
 }
 
 export default function LoginModal({ type }) {
@@ -51,6 +52,16 @@ export default function LoginModal({ type }) {
                         verifyPassword: action.verifyPassword,
                     }
                 }
+                case USER_DATA_ACTIONS.CLEAR_PASSWORDS: {
+                    return {
+                        ...userData,
+                        password: "",
+                        verifyPassword: type === MODAL_TYPES.SIGN_UP ? "" : null,
+                    }
+                }
+                default: {
+                    throw new Error(`Invalid type for dispatchUserData action\n\ttype = ${type}`);
+                }
             }
         },
         {
@@ -79,9 +90,18 @@ export default function LoginModal({ type }) {
         verifyPassword,
     });
 
+    const showErrorAlert = (errorMessage) => {
+        setAlertMessage(errorMessage);
+        dispatchUserData({ type: USER_DATA_ACTIONS.CLEAR_PASSWORDS });
+    }
+
     const handleLogin = async () => {
         if ((userData.userName === "") || (userData.email === "") || (userData.password === "") || (userData.verifyPassword === "")) {
-            setAlertMessage("You must fill out every field.");
+            showErrorAlert("You must fill out every field.");
+            return;
+        }
+        if (userData.password !== userData.verifyPassword) {
+            showErrorAlert("Both passwords need to match. Please re-enter passwords.");
             return;
         }
         
@@ -89,19 +109,20 @@ export default function LoginModal({ type }) {
         if (type === MODAL_TYPES.LOG_IN) errorMessage = await logInWithEmailAndPassword(userData.email, userData.password);
         else if (type === MODAL_TYPES.SIGN_UP) errorMessage = await signUpWithEmailAndPassword(userData.email, userData.password);
 
-        console.log("errorMessage:", errorMessage);
-
         switch (errorMessage) {
             case FIRE_BASE_LOGIN_ERRORS.INVALID_EMAIL: {
-                setAlertMessage("Invalid email entered.");
+                showErrorAlert("Invalid email entered.");
                 break;
             }
             case FIRE_BASE_LOGIN_ERRORS.INVALID_PASSWORD: {
-                setAlertMessage("Invalid password entered. Password needs to be at least six characters long.");
+                showErrorAlert("Invalid password entered. Password needs to be at least six characters long.");
                 break;
             }
             case FIRE_BASE_LOGIN_ERRORS.EMAIL_ALREADY_IN_USE: {
-                setAlertMessage("This email is already being used.");
+                showErrorAlert("This email is already being used.");
+                break;
+            }
+            default: {
                 break;
             }
         }
@@ -114,74 +135,74 @@ export default function LoginModal({ type }) {
             open={true} // I will change this later to make the modal closeable.
         >
             <Box className="modal-box">
-            <h3>
-                <If condition={type === MODAL_TYPES.LOG_IN}>Welcome Back</If>
-                <If condition={type === MODAL_TYPES.SIGN_UP}>Sign Up</If>
-            </h3>
-            
-            <If condition={type === MODAL_TYPES.SIGN_UP}>
+                <h3>
+                    <If condition={type === MODAL_TYPES.LOG_IN}>Welcome Back</If>
+                    <If condition={type === MODAL_TYPES.SIGN_UP}>Sign Up</If>
+                </h3>
+                
+                <If condition={type === MODAL_TYPES.SIGN_UP}>
+                    <TextField
+                        label="User Name"
+                        id="user-name"
+                        type="text"
+                        value={userData.userName}
+                        onChange={(event) => handleUpdateUserName(event.target.value)}
+                        variant="outlined"
+                    />
+                </If>
+
                 <TextField
-                    label="User Name"
-                    id="user-name"
-                    type="text"
-                    value={userData.userName}
-                    onChange={(event) => handleUpdateUserName(event.target.value)}
+                    label="Email"
+                    id="email"
+                    type="email"
+                    value={userData.email}
+                    onChange={(event) => handleUpdateEmail(event.target.value)}
                     variant="outlined"
                 />
-            </If>
 
-            <TextField
-                label="Email"
-                id="email"
-                type="email"
-                value={userData.email}
-                onChange={(event) => handleUpdateEmail(event.target.value)}
-                variant="outlined"
-            />
-
-            <TextField
-                label="Password"
-                id="password"
-                type="password"
-                value={userData.password}
-                onChange={(event) => handleUpdatePassword(event.target.value)}
-                variant="outlined"
-            />
-
-            <If condition={type === MODAL_TYPES.SIGN_UP}>
                 <TextField
-                    label="Re-enter Password"
-                    id="verify-password"
+                    label="Password"
+                    id="password"
                     type="password"
-                    value={userData.verifyPassword}
-                    onChange={(event) => handleUpdateVerifyPassword(event.target.value)}
+                    value={userData.password}
+                    onChange={(event) => handleUpdatePassword(event.target.value)}
                     variant="outlined"
                 />
-            </If>
 
-            <br/> {/* I need to delete this <br/> tag later on. */}
+                <If condition={type === MODAL_TYPES.SIGN_UP}>
+                    <TextField
+                        label="Re-enter Password"
+                        id="verify-password"
+                        type="password"
+                        value={userData.verifyPassword}
+                        onChange={(event) => handleUpdateVerifyPassword(event.target.value)}
+                        variant="outlined"
+                    />
+                </If>
 
-            <Alert
-                severity="warning"
-                onClose={() => {}}
-                display={!!alertMessage ? "block" : "none"}
-            >
-                {alertMessage}
-            </Alert>
+                <br/> {/* I need to delete this <br/> tag later on. */}
 
-            <br/> {/* I need to delete this <br/> tag later on. */}
+                <Alert
+                    severity="warning"
+                    onClose={() => {}}
+                    display={!!alertMessage ? "block" : "none"}
+                >
+                    {alertMessage}
+                </Alert>
 
-            <Button
-                variant="contained"
-                onClick={handleLogin}
-                // disabled={!creds.email || !creds.password}
-            >
-                {
-                    type === MODAL_TYPES.LOG_IN ? "Log In" :
-                    type === MODAL_TYPES.SIGN_UP ? "Sign Up" :
-                    null
-                }
-            </Button>
+                <br/> {/* I need to delete this <br/> tag later on. */}
+
+                <Button
+                    variant="contained"
+                    onClick={handleLogin}
+                    // disabled={!creds.email || !creds.password}
+                >
+                    {
+                        type === MODAL_TYPES.LOG_IN ? "Log In" :
+                        type === MODAL_TYPES.SIGN_UP ? "Sign Up" :
+                        null
+                    }
+                </Button>
             </Box>
         </Modal>
     );
