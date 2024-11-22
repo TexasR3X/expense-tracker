@@ -5,8 +5,10 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import CloseIcon from '@mui/icons-material/Close';
 import Alert from "@mui/material/Alert";
 import If from "./logic-components/If";
+import IconButton from "@mui/material/IconButton";
 
 export const MODAL_TYPES = {
     LOG_IN: "LOG_IN",
@@ -53,7 +55,7 @@ const LOGIN_ERRORS = {
     },
 }
 
-export default function LoginModal({ type }) {
+export default function LoginModal({ type, onClose }) {
     const [userData, dispatchUserData] = useReducer(
         (userData, action) => {
             switch (action.type) {
@@ -183,41 +185,25 @@ export default function LoginModal({ type }) {
         else {
             // Code to log in the user.
         }
-
-        // switch (errorMessage) {
-        //     case LOGIN_ERRORS.INVALID_CREDENTIAL.ID: {
-        //         showErrorAlert(LOGIN_ERRORS.INVALID_CREDENTIAL);
-        //         break;
-        //     }
-        //     case LOGIN_ERRORS.INVALID_EMAIL.ID: {
-        //         showErrorAlert(LOGIN_ERRORS.INVALID_EMAIL);
-        //         break;
-        //     }
-        //     case LOGIN_ERRORS.INVALID_PASSWORD: {
-        //         showErrorAlert("Invalid password entered. Password needs to be at least six characters long.");
-        //         break;
-        //     }
-        //     case LOGIN_ERRORS.EMAIL_ALREADY_IN_USE: {
-        //         showErrorAlert("This email is already being used.");
-        //         break;
-        //     }
-        //     default: {
-        //         break;
-        //     }
-        // }
     };
 
-    const closeAlert = () => dispatchAlert({
-        type: ALERT_ACTIONS.HIDE_ALERT,
-    });
+    const closeAlert = () => dispatchAlert({ type: ALERT_ACTIONS.HIDE_ALERT });
 
     useEffect(closeAlert, [userData]);
 
     return (
         <Modal
-            open={true} // I will change this later to make the modal closeable.
+            open="true"
+            onClose={() => onClose(false)}
         >
             <Box className="modal-box">
+                <IconButton
+                    aria-label="close"
+                    onClick={() => onClose(false)}
+                >
+                    <CloseIcon/>
+                </IconButton>
+
                 <h3>
                     <If condition={type === MODAL_TYPES.LOG_IN}>Welcome Back</If>
                     <If condition={type === MODAL_TYPES.SIGN_UP}>Sign Up</If>

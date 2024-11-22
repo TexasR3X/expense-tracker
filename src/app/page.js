@@ -46,7 +46,7 @@ export default function Home() {
             </main>
 
             <If condition={modelOpen}>
-                <LoginModal type={modalType}/>
+                <LoginModal type={modalType} onClose={setModalOpen}/>
             </If>
         </div>
     );
