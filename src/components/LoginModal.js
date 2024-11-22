@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useReducer, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { logInWithEmailAndPassword, signUpWithEmailAndPassword } from "@/services/firebase";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -26,25 +26,30 @@ const ALERT_ACTIONS = {
 }
 
 const LOGIN_ERRORS = {
+    UNFILLED_FIELDS: {
+        INPUT_MESSAGE: "UNFILLED_FIELDS.INPUT_MESSAGE",
+        OUTPUT_MESSAGE: "You must fill out every field.",
+    },
     UNEQUAL_PASSWORDS: {
-        ID: "UNEQUAL_PASSWORDS",
-        MESSAGE: "Both passwords need to match. Please re-enter passwords."
+        INPUT_MESSAGE: "UNEQUAL_PASSWORDS.INPUT_MESSAGE",
+        OUTPUT_MESSAGE: "Both passwords need to match. Please re-enter passwords.",
     },
-    FIREBASE_INVALID_CREDENTIAL: {
-        ID: "Firebase: Error (auth/invalid-credential).",
-        MESSAGE: "Incorrect email or password entered.",
+    // The following are all firebase errors:
+    INVALID_CREDENTIAL: {
+        INPUT_MESSAGE: "Firebase: Error (auth/invalid-credential).",
+        OUTPUT_MESSAGE: "Incorrect email or password entered.",
     },
-    FIREBASE_INVALID_EMAIL: {
-        ID: "Firebase: Error (auth/invalid-email).",
-        MESSAGE: "Invalid email entered."
+    INVALID_EMAIL: {
+        INPUT_MESSAGE: "Firebase: Error (auth/invalid-email).",
+        OUTPUT_MESSAGE: "Invalid email entered."
     },
-    FIREBASE_INVALID_PASSWORD: {
-        ID: "Firebase: Password should be at least 6 characters (auth/weak-password).",
-        MESSAGE: "Invalid password entered. Passwords need to be at least six characters long.",
+    INVALID_PASSWORD: {
+        INPUT_MESSAGE: "Firebase: Password should be at least 6 characters (auth/weak-password).",
+        OUTPUT_MESSAGE: "Invalid password entered. Passwords need to be at least six characters long.",
     },
-    FIREBASE_EMAIL_ALREADY_IN_USE: {
-        ID: "Firebase: Error (auth/email-already-in-use).",
-        MESSAGE: "This email is already being used.",
+    EMAIL_ALREADY_IN_USE: {
+        INPUT_MESSAGE: "Firebase: Error (auth/email-already-in-use).",
+        OUTPUT_MESSAGE: "This email is already being used.",
     },
 }
 
@@ -70,7 +75,7 @@ export default function LoginModal({ type }) {
                         password: action.password,
                     }
                 }
-                case USER_DATA_ACTIONS.UPDATE_RE_ENTER_PASSWORD: {
+                case USER_DATA_ACTIONS.UPDATE_VERIFY_PASSWORD: {
                     return {
                         ...userData,
                         verifyPassword: action.verifyPassword,
@@ -84,7 +89,7 @@ export default function LoginModal({ type }) {
                     }
                 }
                 default: {
-                    throw new Error(`Invalid type for dispatchUserData action\n\ttype = ${type}`);
+                    throw new Error(`Invalid type for dispatchUserData action\n\ttype = ${type}\n`);
                 }
             }
         },
@@ -95,7 +100,6 @@ export default function LoginModal({ type }) {
             verifyPassword: type === MODAL_TYPES.SIGN_UP ? "" : null,
         }
     );
-    const [alertMessage, setAlertMessage] = useState(null);
 
     const handleUpdateUserName = (userName) => dispatchUserData({
         type: USER_DATA_ACTIONS.UPDATE_USER_NAME,
@@ -114,16 +118,11 @@ export default function LoginModal({ type }) {
         verifyPassword,
     });
 
-    const showErrorAlert = (errorMessage) => {
-        setAlertMessage(errorMessage);
-
-        
-    }
     // const showAlert = useMemo(() => {
     //     return userData.userName === "" || userData.email === "" || userData.password === "" || userData.verifyPassword === "";
     // }, [userData]);
     const [alert, dispatchAlert] = useReducer(
-        (alert, action) => {
+        (_alert, action) => {
             switch (action.type) {
                 case ALERT_ACTIONS.SHOW_ALERT: {
                     return {
@@ -149,46 +148,70 @@ export default function LoginModal({ type }) {
     );
 
     const handleLogin = async () => {
-        // if ((userData.userName === "") || (userData.email === "") || (userData.password === "") || (userData.verifyPassword === "")) {
-        //     showErrorAlert("You must fill out every field.");
-        //     return;
-        // }
+        // Non-firebase error handling:
+        if (userData.userName === "" || userData.email === "" || userData.password === "" || userData.verifyPassword === "") {
+            dispatchAlert({
+                type: ALERT_ACTIONS.SHOW_ALERT,
+                message: LOGIN_ERRORS.UNFILLED_FIELDS.OUTPUT_MESSAGE,
+            });
+            return;
+        }
         if (userData.password !== userData.verifyPassword && type === MODAL_TYPES.SIGN_UP) {
-            console.log("true!");
-            showErrorAlert("Both passwords need to match. Please re-enter passwords.");
+            dispatchAlert({
+                type: ALERT_ACTIONS.SHOW_ALERT,
+                message: LOGIN_ERRORS.UNEQUAL_PASSWORDS.OUTPUT_MESSAGE,
+            });
             return;
         }
         
-        let errorMessage;
-        if (type === MODAL_TYPES.LOG_IN) errorMessage = await logInWithEmailAndPassword(userData.email, userData.password);
-        else if (type === MODAL_TYPES.SIGN_UP) errorMessage = await signUpWithEmailAndPassword(userData.email, userData.password);
+        let errorInputMessage;
+        if (type === MODAL_TYPES.LOG_IN) errorInputMessage = await logInWithEmailAndPassword(userData.email, userData.password);
+        else if (type === MODAL_TYPES.SIGN_UP) errorInputMessage = await signUpWithEmailAndPassword(userData.email, userData.password);
 
-        switch (errorMessage) {
-            case FIREBASE_LOGIN_ERRORS.INVALID_CREDENTIAL: {
-                showErrorAlert("Incorrect email or password.");
-                break;
-            }
-            case FIREBASE_LOGIN_ERRORS.INVALID_EMAIL: {
-                showErrorAlert("Invalid email entered.");
-                break;
-            }
-            case FIREBASE_LOGIN_ERRORS.INVALID_PASSWORD: {
-                showErrorAlert("Invalid password entered. Password needs to be at least six characters long.");
-                break;
-            }
-            case FIREBASE_LOGIN_ERRORS.EMAIL_ALREADY_IN_USE: {
-                showErrorAlert("This email is already being used.");
-                break;
-            }
-            default: {
-                break;
+        if (errorInputMessage !== null) {
+            // Firebase error handling:
+            for (const error of Object.values(LOGIN_ERRORS)) {
+                if (errorInputMessage === error.INPUT_MESSAGE) {
+                    dispatchAlert({
+                        type: ALERT_ACTIONS.SHOW_ALERT,
+                        message: error.OUTPUT_MESSAGE,
+                    });
+                    break;
+                }
             }
         }
+        else {
+            // Code to log in the user.
+        }
+
+        // switch (errorMessage) {
+        //     case LOGIN_ERRORS.INVALID_CREDENTIAL.ID: {
+        //         showErrorAlert(LOGIN_ERRORS.INVALID_CREDENTIAL);
+        //         break;
+        //     }
+        //     case LOGIN_ERRORS.INVALID_EMAIL.ID: {
+        //         showErrorAlert(LOGIN_ERRORS.INVALID_EMAIL);
+        //         break;
+        //     }
+        //     case LOGIN_ERRORS.INVALID_PASSWORD: {
+        //         showErrorAlert("Invalid password entered. Password needs to be at least six characters long.");
+        //         break;
+        //     }
+        //     case LOGIN_ERRORS.EMAIL_ALREADY_IN_USE: {
+        //         showErrorAlert("This email is already being used.");
+        //         break;
+        //     }
+        //     default: {
+        //         break;
+        //     }
+        // }
     };
 
-    console.log("alertMessage:", alertMessage);
+    const closeAlert = () => dispatchAlert({
+        type: ALERT_ACTIONS.HIDE_ALERT,
+    });
 
-    console.log("!!alertMessage:", !!alertMessage);
+    useEffect(closeAlert, [userData]);
 
     return (
         <Modal
@@ -244,10 +267,10 @@ export default function LoginModal({ type }) {
 
                 <Alert
                     severity="warning"
-                    onClose={() => {}}
-                    sx={{ display: !!showAlert ? "flex" : "none" }}
+                    onClose={closeAlert}
+                    sx={{ display: alert.showAlert ? "flex" : "none" }}
                 >
-                    {alertMessage}
+                    {alert.message}
                 </Alert>
 
                 <br/> {/* I need to delete this <br/> tag later on. */}
@@ -255,7 +278,7 @@ export default function LoginModal({ type }) {
                 <Button
                     variant="contained"
                     onClick={handleLogin}
-                    disabled={showAlert}
+                    // disabled={showAlert}
                 >
                     {
                         type === MODAL_TYPES.LOG_IN ? "Log In" :
