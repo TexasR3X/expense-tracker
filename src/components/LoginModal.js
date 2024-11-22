@@ -1,18 +1,18 @@
 "use client";
-import { useReducer, useState } from "react";
-import { FIRE_BASE_LOGIN_ERRORS, logInWithEmailAndPassword, signUpWithEmailAndPassword } from "@/services/firebase";
+import { useMemo, useReducer, useRef, useState } from "react";
+import { logInWithEmailAndPassword, signUpWithEmailAndPassword } from "@/services/firebase";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
-// import { CredsContext, CredsReducerContext } from "@/contexts/CredsContext";
 import If from "./logic-components/If";
 
 export const MODAL_TYPES = {
     LOG_IN: "LOG_IN",
     SIGN_UP: "SIGN_UP",
 }
+
 const USER_DATA_ACTIONS = {
     UPDATE_USER_NAME: "UPDATE_USER_NAME",
     UPDATE_EMAIL: "UPDATE_EMAIL",
@@ -20,11 +20,35 @@ const USER_DATA_ACTIONS = {
     UPDATE_VERIFY_PASSWORD: "UPDATE_RE_ENTER_PASSWORD",
     CLEAR_PASSWORDS: "CLEAR_PASSWORDS",
 }
+const ALERT_ACTIONS = {
+    SHOW_ALERT: "SHOW_ALERT",
+    HIDE_ALERT: "HIDE_ALERT",
+}
+
+const LOGIN_ERRORS = {
+    UNEQUAL_PASSWORDS: {
+        ID: "UNEQUAL_PASSWORDS",
+        MESSAGE: "Both passwords need to match. Please re-enter passwords."
+    },
+    FIREBASE_INVALID_CREDENTIAL: {
+        ID: "Firebase: Error (auth/invalid-credential).",
+        MESSAGE: "Incorrect email or password entered.",
+    },
+    FIREBASE_INVALID_EMAIL: {
+        ID: "Firebase: Error (auth/invalid-email).",
+        MESSAGE: "Invalid email entered."
+    },
+    FIREBASE_INVALID_PASSWORD: {
+        ID: "Firebase: Password should be at least 6 characters (auth/weak-password).",
+        MESSAGE: "Invalid password entered. Passwords need to be at least six characters long.",
+    },
+    FIREBASE_EMAIL_ALREADY_IN_USE: {
+        ID: "Firebase: Error (auth/email-already-in-use).",
+        MESSAGE: "This email is already being used.",
+    },
+}
 
 export default function LoginModal({ type }) {
-    // const creds = useContext(CredsContext);
-    // const dispatchCreds = useContext(CredsReducerContext);
-
     const [userData, dispatchUserData] = useReducer(
         (userData, action) => {
             switch (action.type) {
@@ -86,21 +110,51 @@ export default function LoginModal({ type }) {
         password,
     });
     const handleUpdateVerifyPassword = (verifyPassword) => dispatchUserData({
-        type: USER_DATA_ACTIONS.UPDATE_RE_ENTER_PASSWORD,
+        type: USER_DATA_ACTIONS.UPDATE_VERIFY_PASSWORD,
         verifyPassword,
     });
 
     const showErrorAlert = (errorMessage) => {
         setAlertMessage(errorMessage);
-        dispatchUserData({ type: USER_DATA_ACTIONS.CLEAR_PASSWORDS });
+
+        
     }
+    // const showAlert = useMemo(() => {
+    //     return userData.userName === "" || userData.email === "" || userData.password === "" || userData.verifyPassword === "";
+    // }, [userData]);
+    const [alert, dispatchAlert] = useReducer(
+        (alert, action) => {
+            switch (action.type) {
+                case ALERT_ACTIONS.SHOW_ALERT: {
+                    return {
+                        showAlert: true,
+                        message: action.message,
+                    }
+                }
+                case ALERT_ACTIONS.HIDE_ALERT: {
+                    return {
+                        showAlert: false,
+                        message: null,
+                    }
+                }
+                default: {
+                    break;
+                }
+            }
+        },
+        {
+            showAlert: false,
+            message: null,
+        }
+    );
 
     const handleLogin = async () => {
-        if ((userData.userName === "") || (userData.email === "") || (userData.password === "") || (userData.verifyPassword === "")) {
-            showErrorAlert("You must fill out every field.");
-            return;
-        }
+        // if ((userData.userName === "") || (userData.email === "") || (userData.password === "") || (userData.verifyPassword === "")) {
+        //     showErrorAlert("You must fill out every field.");
+        //     return;
+        // }
         if (userData.password !== userData.verifyPassword && type === MODAL_TYPES.SIGN_UP) {
+            console.log("true!");
             showErrorAlert("Both passwords need to match. Please re-enter passwords.");
             return;
         }
@@ -110,19 +164,19 @@ export default function LoginModal({ type }) {
         else if (type === MODAL_TYPES.SIGN_UP) errorMessage = await signUpWithEmailAndPassword(userData.email, userData.password);
 
         switch (errorMessage) {
-            case FIRE_BASE_LOGIN_ERRORS.INVALID_CREDENTIAL: {
+            case FIREBASE_LOGIN_ERRORS.INVALID_CREDENTIAL: {
                 showErrorAlert("Incorrect email or password.");
                 break;
             }
-            case FIRE_BASE_LOGIN_ERRORS.INVALID_EMAIL: {
+            case FIREBASE_LOGIN_ERRORS.INVALID_EMAIL: {
                 showErrorAlert("Invalid email entered.");
                 break;
             }
-            case FIRE_BASE_LOGIN_ERRORS.INVALID_PASSWORD: {
+            case FIREBASE_LOGIN_ERRORS.INVALID_PASSWORD: {
                 showErrorAlert("Invalid password entered. Password needs to be at least six characters long.");
                 break;
             }
-            case FIRE_BASE_LOGIN_ERRORS.EMAIL_ALREADY_IN_USE: {
+            case FIREBASE_LOGIN_ERRORS.EMAIL_ALREADY_IN_USE: {
                 showErrorAlert("This email is already being used.");
                 break;
             }
@@ -132,7 +186,9 @@ export default function LoginModal({ type }) {
         }
     };
 
+    console.log("alertMessage:", alertMessage);
 
+    console.log("!!alertMessage:", !!alertMessage);
 
     return (
         <Modal
@@ -189,7 +245,7 @@ export default function LoginModal({ type }) {
                 <Alert
                     severity="warning"
                     onClose={() => {}}
-                    display={!!alertMessage ? "block" : "none"}
+                    sx={{ display: !!showAlert ? "flex" : "none" }}
                 >
                     {alertMessage}
                 </Alert>
@@ -199,7 +255,7 @@ export default function LoginModal({ type }) {
                 <Button
                     variant="contained"
                     onClick={handleLogin}
-                    // disabled={!creds.email || !creds.password}
+                    disabled={showAlert}
                 >
                     {
                         type === MODAL_TYPES.LOG_IN ? "Log In" :

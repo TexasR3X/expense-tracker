@@ -70,9 +70,9 @@ export const logout = async () => {
     await auth.signOut();
 };
 
-export const FIRE_BASE_LOGIN_ERRORS = {
-    INVALID_CREDENTIAL: "Firebase: Error (auth/invalid-credential).",
-    INVALID_EMAIL: "Firebase: Error (auth/invalid-email).",
-    INVALID_PASSWORD: "Firebase: Password should be at least 6 characters (auth/weak-password).",
-    EMAIL_ALREADY_IN_USE: "Firebase: Error (auth/email-already-in-use).",
-}
+// export const FIRE_BASE_LOGIN_ERRORS = {
+//     INVALID_CREDENTIAL: "Firebase: Error (auth/invalid-credential).",
+//     INVALID_EMAIL: "Firebase: Error (auth/invalid-email).",
+//     INVALID_PASSWORD: "Firebase: Password should be at least 6 characters (auth/weak-password).",
+//     EMAIL_ALREADY_IN_USE: "Firebase: Error (auth/email-already-in-use).",
+// }
