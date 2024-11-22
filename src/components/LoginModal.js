@@ -15,18 +15,6 @@ export const MODAL_TYPES = {
     SIGN_UP: "SIGN_UP",
 }
 
-const USER_DATA_ACTIONS = {
-    UPDATE_USER_NAME: "UPDATE_USER_NAME",
-    UPDATE_EMAIL: "UPDATE_EMAIL",
-    UPDATE_PASSWORD: "UPDATE_PASSWORD",
-    UPDATE_VERIFY_PASSWORD: "UPDATE_RE_ENTER_PASSWORD",
-    CLEAR_PASSWORDS: "CLEAR_PASSWORDS",
-}
-const ALERT_ACTIONS = {
-    SHOW_ALERT: "SHOW_ALERT",
-    HIDE_ALERT: "HIDE_ALERT",
-}
-
 const LOGIN_ERRORS = {
     UNFILLED_FIELDS: {
         INPUT_MESSAGE: "UNFILLED_FIELDS.INPUT_MESSAGE",
@@ -36,7 +24,7 @@ const LOGIN_ERRORS = {
         INPUT_MESSAGE: "UNEQUAL_PASSWORDS.INPUT_MESSAGE",
         OUTPUT_MESSAGE: "Both passwords need to match. Please re-enter passwords.",
     },
-    // The following are all firebase errors:
+    // The following are all errors returned from firebase:
     INVALID_CREDENTIAL: {
         INPUT_MESSAGE: "Firebase: Error (auth/invalid-credential).",
         OUTPUT_MESSAGE: "Incorrect email or password entered.",
@@ -53,6 +41,18 @@ const LOGIN_ERRORS = {
         INPUT_MESSAGE: "Firebase: Error (auth/email-already-in-use).",
         OUTPUT_MESSAGE: "This email is already being used.",
     },
+}
+
+const USER_DATA_ACTIONS = {
+    UPDATE_USER_NAME: "UPDATE_USER_NAME",
+    UPDATE_EMAIL: "UPDATE_EMAIL",
+    UPDATE_PASSWORD: "UPDATE_PASSWORD",
+    UPDATE_VERIFY_PASSWORD: "UPDATE_RE_ENTER_PASSWORD",
+    CLEAR_PASSWORDS: "CLEAR_PASSWORDS",
+}
+const ALERT_ACTIONS = {
+    SHOW_ALERT: "SHOW_ALERT",
+    HIDE_ALERT: "HIDE_ALERT",
 }
 
 export default function LoginModal({ type, onClose }) {
@@ -120,9 +120,6 @@ export default function LoginModal({ type, onClose }) {
         verifyPassword,
     });
 
-    // const showAlert = useMemo(() => {
-    //     return userData.userName === "" || userData.email === "" || userData.password === "" || userData.verifyPassword === "";
-    // }, [userData]);
     const [alert, dispatchAlert] = useReducer(
         (_alert, action) => {
             switch (action.type) {
