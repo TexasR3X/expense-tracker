@@ -263,11 +263,8 @@ export default function LoginModal({ type, onClose }) {
                     onClick={handleLogin}
                     // disabled={showAlert}
                 >
-                    {
-                        type === MODAL_TYPES.LOG_IN ? "Log In" :
-                        type === MODAL_TYPES.SIGN_UP ? "Sign Up" :
-                        null
-                    }
+                    <If condition={type === MODAL_TYPES.LOG_IN}>Log In</If>
+                    <If condition={type === MODAL_TYPES.SIGN_UP}>Sign Up</If>
                 </Button>
             </Box>
         </Modal>
