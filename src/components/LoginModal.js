@@ -7,7 +7,6 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import CloseIcon from '@mui/icons-material/Close';
 import Alert from "@mui/material/Alert";
-import If from "./logic-components/If";
 import IconButton from "@mui/material/IconButton";
 
 export const MODAL_TYPES = {
@@ -188,6 +187,14 @@ export default function LoginModal({ type, onClose }) {
 
     useEffect(closeAlert, [userData]);
 
+    const welcomeMessage = useMemo(() => {
+        return (
+            type === MODAL_TYPES.LOG_IN ? "Log In" :
+            type === MODAL_TYPES.SIGN_UP ? "Sign Up" :
+            null
+        )
+    }, []);
+
     return (
         <Modal
             open="true"
@@ -201,21 +208,20 @@ export default function LoginModal({ type, onClose }) {
                     <CloseIcon/>
                 </IconButton>
 
-                <h3>
-                    <If condition={type === MODAL_TYPES.LOG_IN}>Welcome Back</If>
-                    <If condition={type === MODAL_TYPES.SIGN_UP}>Sign Up</If>
-                </h3>
+                <h3>{welcomeMessage}</h3>
                 
-                <If condition={type === MODAL_TYPES.SIGN_UP}>
-                    <TextField
-                        label="User Name"
-                        id="user-name"
-                        type="text"
-                        value={userData.userName}
-                        onChange={(event) => handleUpdateUserName(event.target.value)}
-                        variant="outlined"
-                    />
-                </If>
+                {
+                    type === MODAL_TYPES.SIGN_UP ? (
+                        <TextField
+                            label="User Name"
+                            id="user-name"
+                            type="text"
+                            value={userData.userName}
+                            onChange={(event) => handleUpdateUserName(event.target.value)}
+                            variant="outlined"
+                        />
+                    ) : null
+                }
 
                 <TextField
                     label="Email"
@@ -235,16 +241,18 @@ export default function LoginModal({ type, onClose }) {
                     variant="outlined"
                 />
 
-                <If condition={type === MODAL_TYPES.SIGN_UP}>
-                    <TextField
-                        label="Re-enter Password"
-                        id="verify-password"
-                        type="password"
-                        value={userData.verifyPassword}
-                        onChange={(event) => handleUpdateVerifyPassword(event.target.value)}
-                        variant="outlined"
-                    />
-                </If>
+                {
+                    type === MODAL_TYPES.SIGN_UP ? (
+                        <TextField
+                            label="Re-enter Password"
+                            id="verify-password"
+                            type="password"
+                            value={userData.verifyPassword}
+                            onChange={(event) => handleUpdateVerifyPassword(event.target.value)}
+                            variant="outlined"
+                        />
+                    ) : null
+                }
 
                 <br/> {/* I need to delete this <br/> tag later on. */}
 
@@ -263,8 +271,7 @@ export default function LoginModal({ type, onClose }) {
                     onClick={handleLogin}
                     // disabled={showAlert}
                 >
-                    <If condition={type === MODAL_TYPES.LOG_IN}>Log In</If>
-                    <If condition={type === MODAL_TYPES.SIGN_UP}>Sign Up</If>
+                    {welcomeMessage}
                 </Button>
             </Box>
         </Modal>

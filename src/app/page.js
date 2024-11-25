@@ -8,10 +8,9 @@ import {
 } from "@/services/firebase";
 import Button from "@mui/material/Button";
 import LoginModal, { MODAL_TYPES } from "@/components/LoginModal";
-import If from "@/components/logic-components/If";
 
 export default function Home() {
-    const user = useContext(FirebaseAuthContext);
+    // const user = useContext(FirebaseAuthContext);
     const [modelOpen, setModalOpen] = useState(false);
     const [modalType, setModalType] = useState(null);
 
@@ -45,9 +44,7 @@ export default function Home() {
                 </Button>
             </main>
 
-            <If condition={modelOpen}>
-                <LoginModal type={modalType} onClose={setModalOpen}/>
-            </If>
+            {modelOpen ? <LoginModal type={modalType} onClose={setModalOpen}/> : null}
         </div>
     );
 }
