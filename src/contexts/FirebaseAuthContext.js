@@ -16,7 +16,7 @@ export default function FirebaseAuthProvider({ children }) {
         const auth = getAuth();
 
         // I should delete this or change it later. //...................................//
-        logout();
+        // logout();
 
         // auth.onAuthStateChanged basically creates an event listener for when the user changes.
             // unsub = unsubscribe

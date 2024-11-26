@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { logInWithEmailAndPassword, signUpWithEmailAndPassword } from "@/services/firebase";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -101,6 +102,8 @@ export default function LoginModal({ type, onClose }) {
             verifyPassword: type === MODAL_TYPES.SIGN_UP ? "" : null,
         }
     );
+    // const router = useNavigation();
+    const router = useRouter();
 
     const handleUpdateUserName = (userName) => dispatchUserData({
         type: USER_DATA_ACTIONS.UPDATE_USER_NAME,
@@ -178,9 +181,8 @@ export default function LoginModal({ type, onClose }) {
                 }
             }
         }
-        else {
-            // Code to log in the user.
-        }
+        // Put user on expense tracking home page.
+        else router.push("/home");
     };
 
     const closeAlert = () => dispatchAlert({ type: ALERT_ACTIONS.HIDE_ALERT });
