@@ -70,14 +70,14 @@ export const logout = async () => {
     await auth.signOut();
 }
 
-export let user2;
+export let user;
 export const addUserChangeListener = async () => {
     const auth = getAuth();
 
-    auth.onAuthStateChanged((user) => {
+    auth.onAuthStateChanged((newUser) => {
         console.log("User changed!");
-        console.log("user:", user);
+        console.log("newUser:", newUser);
         console.log("");
-        user2 = user;
+        user = newUser;
     }, []);
 }
