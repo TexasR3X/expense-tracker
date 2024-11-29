@@ -45,7 +45,7 @@ export default function LogIn() {
                 </Button>
             </main>
 
-            {modelOpen ? <LoginModal type={modalType} onClose={setModalOpen}/> : null}
+            {modelOpen ? <LoginModal type={modalType} setModalOpen={setModalOpen}/> : null}
         </div>
     );
 }

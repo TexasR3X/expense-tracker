@@ -55,7 +55,7 @@ const ALERT_ACTIONS = {
     HIDE_ALERT: "HIDE_ALERT",
 }
 
-export default function LoginModal({ type, onClose }) {
+export default function LoginModal({ type, setModalOpen }) {
     const [userData, dispatchUserData] = useReducer(
         (userData, action) => {
             switch (action.type) {
@@ -197,15 +197,17 @@ export default function LoginModal({ type, onClose }) {
         )
     }, []);
 
+    const closeModal = () => setModalOpen(false);
+
     return (
         <Modal
             open="true"
-            onClose={() => onClose(false)}
+            onClose={closeModal}
         >
             <Box className="modal-box">
                 <IconButton
                     aria-label="close"
-                    onClick={() => onClose(false)}
+                    onClick={closeModal}
                 >
                     <CloseIcon/>
                 </IconButton>
