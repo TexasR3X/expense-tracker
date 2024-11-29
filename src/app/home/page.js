@@ -5,6 +5,7 @@ import { collection, addDoc, getDocs, doc, getDoc, setDoc } from "firebase/fires
 import { addUserChangeListener, db, user2 } from "@/services/firebase";
 import { getCategoryData } from "@/services/database";
 import { Button } from "@mui/material";
+import ExpCard from "@/components/ExpCard";
 
 export default function Home() {
     const user = useContext(FirebaseAuthContext);
@@ -110,6 +111,10 @@ export default function Home() {
             >
                 123456789876543
             </Button>
+
+            <ExpCard>
+
+            </ExpCard>
         </div>
     );
 }

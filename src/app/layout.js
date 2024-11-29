@@ -1,5 +1,5 @@
 import localFont from "next/font/local";
-import "./globals.css";
+import "./styles/globals.css";
 import FirebaseAuthProvider from "@/contexts/FirebaseAuthContext";
 import CredsProvider from "@/contexts/CredsContext";
 
