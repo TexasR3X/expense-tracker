@@ -31,6 +31,8 @@ export const initializeFirebase = () => {
 }
 initializeFirebase();
 
+const auth = getAuth();
+
 // Firebase version of above code:
 // // Initialize Firebase
 // const app = initializeApp(firebaseConfig);
@@ -72,17 +74,23 @@ export const logout = async () => {
 }
 
 export let user;
-export const addUserChangeListener = async () => {
-    const auth = getAuth();
+auth.onAuthStateChanged((newUser) => {
+    console.log("User changed!");
+    console.log("newUser:", newUser);
+    console.log("");
+    user = newUser;
+}, []);
+// export const addUserChangeListener = async () => {
+//     const auth = getAuth();
 
-    return auth.onAuthStateChanged((newUser) => {
-        console.log("User changed!");
-        console.log("newUser:", newUser);
-        console.log("");
-        user = newUser;
-    }, []);
-}
-addUserChangeListener();
+//     auth.onAuthStateChanged((newUser) => {
+//         console.log("User changed!");
+//         console.log("newUser:", newUser);
+//         console.log("");
+//         user = newUser;
+//     }, []);
+// }
+// addUserChangeListener();
 
 // export const getData = async (collectionID, user) => {
 //     const docRef = doc(db, "food", "9OJmF91TaohlA6a4Dd4abBnpqf12");

@@ -2,15 +2,15 @@
 import { useContext, useEffect } from "react";
 import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 import { collection, addDoc, getDocs, doc, getDoc, setDoc } from "firebase/firestore";
-import { addUserChangeListener, db, getData, user } from "@/services/firebase";
-import { getExpCategoryData, getTxnsFromExp } from "@/services/database";
+import { db, user } from "@/services/firebase";
+import { Exp, getExpData, getTxnsFromExp } from "@/services/database";
 import { Button } from "@mui/material";
 import ExpCard from "@/components/ExpCard";
 
 export default function Home() {
     // const user = useContext(FirebaseAuthContext);
 
-    const fetchCollection = async () => {
+    const testFn = async () => {
         try {
             // console.log("db:", db);
 
@@ -90,7 +90,12 @@ export default function Home() {
             // });
 
             // console.log("user:", user);
-            // console.log(`getExpCategoryData("food"):`, await getExpCategoryData("food"));
+            // console.log(`getExpData("food"):`, await getExpData("food"));
+
+            const w = new Exp("food");
+
+            console.log("w:", w);
+
         } catch (e) {
             console.error("e:", e);
         }
@@ -106,9 +111,9 @@ export default function Home() {
 
             <Button
                 variant="contained"
-                onClick={fetchCollection}
+                onClick={testFn}
             >
-                123456789876543
+                Test Button
             </Button>
 
             <ExpCard heading="ExpCard Heading"/>
