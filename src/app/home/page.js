@@ -1,14 +1,14 @@
 "use client";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 import { collection, addDoc, getDocs, doc, getDoc, setDoc } from "firebase/firestore";
-import { addUserChangeListener, db, user2 } from "@/services/firebase";
-import { getCategoryData } from "@/services/database";
+import { addUserChangeListener, db, getData, user } from "@/services/firebase";
+import { getExpCategoryData, getTxnsFromExp } from "@/services/database";
 import { Button } from "@mui/material";
 import ExpCard from "@/components/ExpCard";
 
 export default function Home() {
-    const user = useContext(FirebaseAuthContext);
+    // const user = useContext(FirebaseAuthContext);
 
     const fetchCollection = async () => {
         try {
@@ -72,7 +72,7 @@ export default function Home() {
 
 
 
-            // const docRef = doc(db, "User UID", "9OJmF91TaohlA6a4Dd4abBnpqf12");
+            // const docRef = doc(db, "food", "9OJmF91TaohlA6a4Dd4abBnpqf12");
             // console.log("docRef:", docRef);
             // const docSnap = await getDoc(docRef);
             // console.log("docSnap.data():", docSnap.data());
@@ -89,9 +89,8 @@ export default function Home() {
             //     console.log("doc.data():", doc.data());
             // });
 
-            console.log("D:", await getCategoryData("food", user));
-            addUserChangeListener();
-            console.log("user2:", user2);
+            // console.log("user:", user);
+            // console.log(`getExpCategoryData("food"):`, await getExpCategoryData("food"));
         } catch (e) {
             console.error("e:", e);
         }
@@ -112,9 +111,7 @@ export default function Home() {
                 123456789876543
             </Button>
 
-            <ExpCard>
-
-            </ExpCard>
+            <ExpCard heading="ExpCard Heading"/>
         </div>
     );
 }

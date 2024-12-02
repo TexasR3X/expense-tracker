@@ -22,12 +22,15 @@ export default function FirebaseAuthProvider({ children }) {
             // unsub = unsubscribe
             // auth.onAuthStateChanged also returns a function (unsub). When unsub is called, it will "unsubscribe" the
             // websock connecting Firestore to the browser. This means basically means it will kill the event listener.
-        const unsub = auth.onAuthStateChanged((user) => {
-            console.log("User changed!");
-            console.log("user:", user);
-            console.log("");
-            setUser(user);
-        }, []);
+        // const unsub = auth.onAuthStateChanged((user) => {
+        //     console.log("User changed!");
+        //     console.log("user:", user);
+        //     console.log("");
+        //     setUser(user);
+        // }, []);
+        //
+        // const unsub = addUserChangeListener();
+        const unsub = () => {}; // ============================= Delete this line later ============================= //
 
         // Calling this function will delete the auth.onAuthStateChanged event listener.
         return unsub;
