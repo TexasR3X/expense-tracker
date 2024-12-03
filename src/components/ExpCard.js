@@ -8,8 +8,8 @@ export const EXP_CARD_TYPES = {
 }
 
 export default function ExpCard({ heading, exp }) {
-    console.log("exp:", exp);
-    console.log("exp.forEachTxn():", exp.forEachTxn());
+    // console.log("exp:", exp);
+    // console.log("exp.forEachTxn():", exp.forEachTxn());
 
     return (
         <div className="exp-card">
