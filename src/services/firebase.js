@@ -21,17 +21,17 @@ const firebaseConfig = {
 }
 
 // Create database, but set after firebase initialized.
-export let db;
+// export let db;
 // Initialize Firebase
 export const initializeFirebase = () => {
     // 
     const app = initializeApp(firebaseConfig);
     getAnalytics(app);
-    db = getFirestore(app);
+    // db = getFirestore(app);
 }
-initializeFirebase();
+// initializeFirebase();
 
-const auth = getAuth();
+// const auth = getAuth();
 
 // Firebase version of above code:
 // // Initialize Firebase
@@ -73,13 +73,13 @@ export const logout = async () => {
     await auth.signOut();
 }
 
-export let user;
-auth.onAuthStateChanged((newUser) => {
-    console.log("User changed!");
-    console.log("newUser:", newUser);
-    console.log("");
-    user = newUser;
-}, []);
+// export let user;
+// auth.onAuthStateChanged((newUser) => {
+//     console.log("User changed!");
+//     console.log("newUser:", newUser);
+//     console.log("");
+//     user = newUser;
+// }, []);
 // export const addUserChangeListener = async () => {
 //     const auth = getAuth();
 

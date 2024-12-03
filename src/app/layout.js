@@ -1,7 +1,7 @@
 import localFont from "next/font/local";
 import "./styles/globals.css";
 import FirebaseAuthProvider from "@/contexts/FirebaseAuthContext";
-import CredsProvider from "@/contexts/CredsContext";
+import FirebaseDBProvider from "@/contexts/FirebaseDBContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,9 +24,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <FirebaseAuthProvider>
-          <CredsProvider>
+          <FirebaseDBProvider>
             {children}
-          </CredsProvider>
+          </FirebaseDBProvider>
         </FirebaseAuthProvider>
       </body>
     </html>

@@ -2,43 +2,10 @@
 import { collection, addDoc, getDocs, doc, getDoc, setDoc, where, query } from "firebase/firestore";
 import { db } from "@/services/firebase";
 
-/*
-export async function getExpData(categoryID) {
-    const uid = user?.uid
-    if (!uid) throw new Error(`Invalid type for user\n\tuser = ${user}\n`);
-
-    const docRef = doc(db, categoryID, uid);
-    const docSnap = await getDoc(docRef);
-
-    console.log("docSnap:", docSnap);
-
-    // console.log("D:", (await getDoc(doc(docRef, "txns", "KO8xUus8DV7SA8gYwYjm"))).data());
-    // getTxnsFromExp(collection(docRef, "txns"));
-    
-    if (docSnap.exists()) return docSnap; //.data()
-    else {
-        console.error("docSnap.exists() === false")
-        return null;
-    }
-}
-export async function getTxnsFromExp(txnsRef) {
-    // const q = query(collection(db, "cities"), where("capital", "==", true));
-
-    const txnsSnap = await getDocs(txnsRef);
-    txnsSnap.forEach((doc) => {
-        console.log("");
-        console.log("doc.id", doc.id);
-        console.log("doc.data()", doc.data());
-    });
-}
-*/
-
-
-
 export class Exp {
-    constructor(expID, user) {
+    constructor(expID, user, db) {
         (async () => {
-            [this.expRef, this.expData] = await getExpData(expID, user);
+            [this.expRef, this.expData] = await getExpData(expID, user, db);
             this.txns = await getTxns(this.expRef);
         })();
     }
@@ -56,8 +23,10 @@ const getTxns = async (expRef) => {
 
     return txnsObj;
 }
-const getExpData = async (expID, user) => {
-    const uid = user?.uid
+const getExpData = async (expID, user, db) => {
+    console.log("database.js: user:", user);
+
+    const uid = user?.uid;
     if (!uid) throw new Error(`Invalid type for user\n\tuser = ${user}\n`);
 
     const expRef = doc(db, expID, uid);
@@ -68,10 +37,7 @@ const getExpData = async (expID, user) => {
     // console.log("D:", (await getDoc(doc(docRef, "txns", "KO8xUus8DV7SA8gYwYjm"))).data());
     // getTxnsFromExp(collection(docRef, "txns"));
     
-    if (expSnap.exists()) return [
-        expRef,
-        expSnap.data(),
-    ];
+    if (expSnap.exists()) return [expRef, expSnap.data()];
     else {
         console.error("expSnap.exists() === false")
         return null;

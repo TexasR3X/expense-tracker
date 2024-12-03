@@ -1,14 +1,15 @@
 "use client";
 import { useContext, useEffect } from "react";
-import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 import { collection, addDoc, getDocs, doc, getDoc, setDoc } from "firebase/firestore";
-import { db, user } from "@/services/firebase";
-import { Exp, getExpData, getTxnsFromExp } from "@/services/database";
+import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
+import { FirebaseDBContext } from "@/contexts/FirebaseDBContext";
 import { Button } from "@mui/material";
 import ExpCard from "@/components/ExpCard";
+import { Exp, getExpData, getTxnsFromExp } from "@/services/database";
 
 export default function Home() {
-    // const user = useContext(FirebaseAuthContext);
+    const user = useContext(FirebaseAuthContext);
+    const db = useContext(FirebaseDBContext);
 
     const testFn = async () => {
         try {

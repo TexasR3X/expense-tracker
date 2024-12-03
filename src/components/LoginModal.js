@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useReducer, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 import { useRouter } from "next/navigation";
 import { logInWithEmailAndPassword, signUpWithEmailAndPassword } from "@/services/firebase";
 import Modal from "@mui/material/Modal";
