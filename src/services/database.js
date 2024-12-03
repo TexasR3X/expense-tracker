@@ -1,6 +1,6 @@
 "use client";
 import { collection, addDoc, getDocs, doc, getDoc, setDoc, where, query } from "firebase/firestore";
-import { db, user } from "@/services/firebase";
+import { db } from "@/services/firebase";
 
 /*
 export async function getExpData(categoryID) {
@@ -36,9 +36,9 @@ export async function getTxnsFromExp(txnsRef) {
 
 
 export class Exp {
-    constructor(expID) {
+    constructor(expID, user) {
         (async () => {
-            [this.expRef, this.expData] = await getExpData(expID);
+            [this.expRef, this.expData] = await getExpData(expID, user);
             this.txns = await getTxns(this.expRef);
         })();
     }
@@ -48,18 +48,15 @@ const getTxns = async (expRef) => {
     const txnsRef = collection(expRef, "txns");
     const txnsSnap = await getDocs(txnsRef);
 
-    const txnsArr = [];
+    const txnsObj = {};
 
     txnsSnap.forEach((doc) => {
-        const docObj = doc.data();
-        docObj.id = doc.id;
-
-        txnsArr.push(docObj);
+        txnsObj[doc.id] = { ...doc.data() };
     });
 
-    return txnsArr;
+    return txnsObj;
 }
-const getExpData = async (expID) => {
+const getExpData = async (expID, user) => {
     const uid = user?.uid
     if (!uid) throw new Error(`Invalid type for user\n\tuser = ${user}\n`);
 

@@ -92,7 +92,7 @@ export default function Home() {
             // console.log("user:", user);
             // console.log(`getExpData("food"):`, await getExpData("food"));
 
-            const w = new Exp("food");
+            const w = new Exp("food", user);
 
             console.log("w:", w);
 
