@@ -15,14 +15,15 @@ export default function FirebaseDBProvider({ children }) {
 
     useEffect(() => {
         // initializeFirebase();
-        const auth = getAuth();
+        // const auth = getAuth();
 
         const unsub = onSnapshot(doc(db, "cities", "SF"), (doc) => {
             console.log("Current data:", doc.data());
+            // setDB(initializeDB);
         });
 
         return unsub;
     }, []);
 
-    return <FirebaseDBContext.Provider value={0}>{children}</FirebaseDBContext.Provider>;
+    return <FirebaseDBContext.Provider value={db}>{children}</FirebaseDBContext.Provider>;
 }

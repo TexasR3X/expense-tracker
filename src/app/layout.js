@@ -24,9 +24,9 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <FirebaseAuthProvider>
-          <FirebaseDBProvider>
+          {/* <FirebaseDBProvider> */}
             {children}
-          </FirebaseDBProvider>
+          {/* </FirebaseDBProvider> */}
         </FirebaseAuthProvider>
       </body>
     </html>

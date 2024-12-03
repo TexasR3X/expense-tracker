@@ -1,4 +1,5 @@
 "use client";
+import { db } from '@/services/database';
 import AddIcon from '@mui/icons-material/Add';
 import Money from "@/components/Money";
 
@@ -6,7 +7,10 @@ export const EXP_CARD_TYPES = {
     
 }
 
-export default function ExpCard({ heading }) {
+export default function ExpCard({ heading, exp }) {
+    console.log("exp:", exp);
+    console.log("exp.forEachTxn():", exp.forEachTxn());
+
     return (
         <div className="exp-card">
             <h4>
@@ -15,6 +19,12 @@ export default function ExpCard({ heading }) {
                 </div>
                 <AddIcon/>
             </h4>
+
+            <div>
+
+            </div>
+
+
             {/* <table>
                 <tbody>
                     <tr>
