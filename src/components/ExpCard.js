@@ -7,7 +7,7 @@ export const EXP_CARD_TYPES = {
     
 }
 
-export default function ExpCard({ heading, exp }) {
+export default function ExpCard({ heading, exps }) {
     // console.log("exp:", exp);
     // console.log("exp.forEachTxn():", exp.forEachTxn());
 

@@ -18,7 +18,6 @@ export default function Home() {
 
     useEffect(() => {
         fetchCollection();
-        printExpCards();
     }, []);
 
     const testFn = async () => {
@@ -30,16 +29,26 @@ export default function Home() {
         }
     }
 
-    const printExpCards = () => {
+    const renderExpCards = () => {
         console.log("");
         console.log("EXP_TYPES:", EXP_TYPES);
+        const expCardsArr = [];
+
         EXP_TYPES.forEach((type) => {
             console.log("type:", type);
-            // const filteredExps = expCollection.filter((exp) => exp.type === );
+            const filteredExps = expCollection.filter((exp) => exp.type === type);
+            expCardsArr.push(
+                <ExpCard
+                    heading={type}
+                    key={`${type} ExpCard key`}
+                    exps={filteredExps}
+                />
+            );
         });
         console.log("");
-    }
 
+        return expCardsArr;
+    }
 
     console.log("expCollection:", expCollection);
 
@@ -56,16 +65,7 @@ export default function Home() {
                 Test
             </Button>
 
-            {/* {!user ? expCollection.filterType("Food").map(() => {
-                <ExpCard
-                    heading="ExpCard Heading"
-                />
-            }): null} */}
-
-            {/* <ExpCard
-                heading="ExpCard Heading"
-                // exp={new Exp("food", user)}
-            /> */}
+            {!!expCollection ? renderExpCards() : null}
         </div>
     );
 }
