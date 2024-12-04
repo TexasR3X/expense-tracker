@@ -22,7 +22,6 @@ export default function FirebaseExpsProvider({ children }) {
                 expsDataArr.push(new Exp(doc.data()));
             });
 
-            console.log("expCollection:", expCollection);
             setExpCollection(expsDataArr);
         })();
     }, [expCollection]);
@@ -52,5 +51,5 @@ export default function FirebaseExpsProvider({ children }) {
     //     return unsub;
     // }, []);
 
-    return <FirebaseExpsContext.Provider value={db}>{children}</FirebaseExpsContext.Provider>;
+    return <FirebaseExpsContext.Provider value={expCollection}>{children}</FirebaseExpsContext.Provider>;
 }

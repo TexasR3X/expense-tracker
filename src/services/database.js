@@ -41,12 +41,30 @@ export class Exp {
 //     return expDataArr;
 // }
 
-class ExpCollection {
-    constructor() {
+export const getExpCollection = async (user) => {
+    const expsQueryRef = query(collection(db, "expenses"), where("UID", "==", user.uid));
+    const expsQuerySnap = await getDocs(expsQueryRef);
+    
+    const expsDataArr = [];
+
+    expsQuerySnap.forEach((doc) => {
+        console.log("doc.data():", doc.data());
+        expsDataArr.push(new Exp(doc.data()));
+    });
+
+    console.log("expsDataArr:", expsDataArr);
+    return expsDataArr;
+}
+
+export class ExpCollection {
+    constructor(collection) {
+        this.exps = [...collection];
+    }
+
+    forEach() {
 
     }
 }
-export const expCollection = new ExpCollection();
 
 // const getTxns = async (expRef) => {
 //     const txnsRef = collection(expRef, "txns");

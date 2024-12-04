@@ -1,10 +1,10 @@
 "use client";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { collection, addDoc, getDocs, doc, getDoc, setDoc, query, where } from "firebase/firestore";
 import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 import { Button } from "@mui/material";
 import ExpCard from "@/components/ExpCard";
-import { db, Exp } from "@/services/database";
+import { db, Exp, ExpCollection, getExpCollection } from "@/services/database";
 
 export default function Home() {
     const user = useContext(FirebaseAuthContext);
@@ -26,6 +26,39 @@ export default function Home() {
     //     (async () => setExpArr(await getExpsSnap(user)))();
     // }, []);
 
+    /*
+    const expCollection = useMemo(() => {
+        let returnValue;
+        (async () => {
+            returnValue = new ExpCollection(await getExpCollection(user));
+        })();
+        return returnValue;
+    }, []);
+    */
+
+    // const expCollection = useMemo(() => {
+    //     return new ExpCollection(await getExpCollection(user));
+    // }, []);
+    
+    const expCollection = useMemo(() => {
+        ()();
+    });
+
+
+
+    /*
+    let expCollection;
+    useEffect(() => {
+        console.log("run!");
+        (async () => {
+            console.log("user:", user);
+            if (!!user) {
+                expCollection = new ExpCollection(await getExpCollection(user));
+                console.log("in expCollection:", expCollection);
+            }
+        })();
+    }, [user]);
+    */
 
     const testFn = async () => {
         try {
@@ -43,11 +76,16 @@ export default function Home() {
             //     console.log("new Exp(doc.data()):", new Exp(doc.data()));
             //     console.log("");
             // });
+            // const expCollection = new ExpCollection(await getExpCollection(user));
+
+            console.log("expCollection:", expCollection);
         }
         catch (e) {
             console.error("e:", e);
         }
     }
+
+    console.log("expCollection:", expCollection);
 
     return (
         <div>
@@ -61,7 +99,7 @@ export default function Home() {
                 variant="contained"
                 onClick={testFn}
             >
-                Test Button
+                Start
             </Button>
 
             <ExpCard
