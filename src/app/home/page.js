@@ -42,8 +42,8 @@ export default function Home() {
     
     const expCollection = useMemo(() => {
         let returnValue;
-        (async () => {
-            returnValue = new ExpCollection(await getExpCollection(user)); 
+        if (!!user) (async () => {
+            returnValue = new ExpCollection(await getExpCollection(user))
         })();
         return returnValue;
     }, [user]);
@@ -99,17 +99,25 @@ export default function Home() {
                 Welcome to the page where you track all of your expenses!
             </p>
 
-            <Button
-                variant="contained"
-                onClick={testFn}
-            >
-                Start
-            </Button>
+            {
+                !user ? <h2>Loading...</h2> : (
+                    <>
+                        <Button
+                            variant="contained"
+                            onClick={testFn}
+                        >
+                            Start
+                        </Button>
 
-            <ExpCard
-                heading="ExpCard Heading"
-                // exp={new Exp("food", user)}
-            />
+                        <ExpCard
+                            heading="ExpCard Heading"
+                            // exp={new Exp("food", user)}
+                        />
+                    </>
+                )
+            }
+
+            
         </div>
     );
 }
