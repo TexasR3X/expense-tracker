@@ -2,7 +2,7 @@
     --background: #ffffff;
     --foreground: #171717;
 }
-  
+
 @media (prefers-color-scheme: dark) {
     :root {
         --background: #0a0a0a;
@@ -33,7 +33,7 @@ a {
     color: inherit;
     text-decoration: none;
 }
-  
+
 .modal-box {
     position: fixed;
     left: 3rem;
@@ -43,7 +43,21 @@ a {
     background-color: #fff;
     padding: 1.5rem;
 }
-  
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+
+    background-color: #4a86e8ff;
+    color: #fff;
+
+    h2 {
+        flex-grow: 1;
+    }
+}
+
 .exp-card {
     border: 2px solid #000;
 

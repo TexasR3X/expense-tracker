@@ -6,82 +6,38 @@ import { Button } from "@mui/material";
 import ExpCard from "@/components/ExpCard";
 import { db, Exp, ExpCollection, getExpCollection } from "@/services/database";
 
+
+
+
 export default function Home() {
     const user = useContext(FirebaseAuthContext);
+    const [expCollection, setExpCollection] = useState(null);
+    
+    const fetchCollection = async () => {
+        const response = await getExpCollection(user)
+        setExpCollection(new ExpCollection(response));
+    }
 
-    // const initialExpArr = useMemo(async () => {
-    //     const userExpsQueryRef = query(collection(db, "expenses"), where("UID", "==", user.uid))
-    //     const userExpsQuerySnap = await getDocs(userExpsQueryRef);
-
-    //     userExpsQuerySnap.forEach((doc) => {
-    //         console.log("doc.data():", doc.data());
-    //         console.log("new Exp(doc.data()):", new Exp(doc.data()));
-    //         console.log("");
-    //     });
-    //     return ;
-    // });
-
-    // const [expArr, setExpArr] = useState(null);
-    // useEffect(() => {
-    //     (async () => setExpArr(await getExpsSnap(user)))();
-    // }, []);
-
-    /*
-    const expCollection = useMemo(() => {
-        let returnValue;
-        (async () => {
-            returnValue = new ExpCollection(await getExpCollection(user));
-        })();
-        return returnValue;
+    useEffect(() => {
+        fetchCollection();
     }, []);
-    */
+
 
     // const expCollection = useMemo(() => {
-    //     return new ExpCollection(await getExpCollection(user));
-    // }, []);
-    
-    const expCollection = useMemo(() => {
-        let returnValue;
-        if (!!user) (async () => {
-            returnValue = new ExpCollection(await getExpCollection(user))
-        })();
-        return returnValue;
-    }, [user]);
+    //     let returnValue;
+    //     console.log("1");
 
-
-
-    /*
-    let expCollection;
-    useEffect(() => {
-        console.log("run!");
-        (async () => {
-            console.log("user:", user);
-            if (!!user) {
-                expCollection = new ExpCollection(await getExpCollection(user));
-                console.log("in expCollection:", expCollection);
-            }
-        })();
-    }, [user]);
-    */
+    //     // if (!!user) (async () => {
+    //     //     returnValue = new ExpCollection(await getExpCollection(user));
+    //     //     console.log("2");
+    //     // })();
+        
+    //     console.log("3");
+    //     return returnValue;
+    // }, [user]);
 
     const testFn = async () => {
         try {
-            // const q = query(collection(db, "cities"), where("capital", "==", true));
-
-            // const querySnapshot = await getDocs(q);
-            // querySnapshot.forEach((doc) => {
-            //     console.log(doc.id, " => ", doc.data());
-            // });
-
-            // const userExpsQueryRef = query(collection(db, "expenses"), where("UID", "==", user.uid))
-            // const userExpsQuerySnap = await getDocs(userExpsQueryRef);
-            // userExpsQuerySnap.forEach((doc) => {
-            //     console.log("doc.data():", doc.data());
-            //     console.log("new Exp(doc.data()):", new Exp(doc.data()));
-            //     console.log("");
-            // });
-            // const expCollection = new ExpCollection(await getExpCollection(user));
-
             console.log("expCollection:", expCollection);
         }
         catch (e) {
@@ -93,31 +49,25 @@ export default function Home() {
 
     return (
         <div>
-            <h1>Expense Tracker</h1>
-
             <p>
                 Welcome to the page where you track all of your expenses!
             </p>
+            
+            <Button
+                variant="contained"
+                onClick={testFn}
+            >
+                Test
+            </Button>
 
             {
-                !user ? <h2>Loading...</h2> : (
-                    <>
-                        <Button
-                            variant="contained"
-                            onClick={testFn}
-                        >
-                            Start
-                        </Button>
-
-                        <ExpCard
-                            heading="ExpCard Heading"
-                            // exp={new Exp("food", user)}
-                        />
-                    </>
-                )
+                
             }
 
-            
+            {/* <ExpCard
+                heading="ExpCard Heading"
+                // exp={new Exp("food", user)}
+            /> */}
         </div>
     );
 }

@@ -61,8 +61,8 @@ export class ExpCollection {
         this.exps = [...collection];
     }
 
-    forEach() {
-
+    map() {
+        return this.exps.map();
     }
 }
 

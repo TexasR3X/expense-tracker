@@ -43,6 +43,18 @@ a {
   padding: 1.5rem;
 }
 
+nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background-color: #4a86e8;
+  color: #fff;
+}
+nav h2 {
+  flex-grow: 1;
+}
+
 .exp-card {
   border: 2px solid #000;
 }
