@@ -25,29 +25,8 @@ export class Exp {
         this.type = expData.type;
         this.amount = expData.amount;
         this.timestamp = expData.timestamp;
-
-
-        // (async () => {
-        //     [this.expRef, this.expData] = await getExpData(expID, user);
-        //     this.txns = await getTxns(this.expRef);
-        // })();
     }
 }
-
-// export const getExpsSnap = async (user) => {
-//     const expsQueryRef = query(collection(db, "expenses"), where("UID", "==", user.uid));
-//     const expsQuerySnap = await getDocs(expsQueryRef);
-    
-//     const expDataArr = [];
-
-//     expsQuerySnap.forEach((doc) => {
-//         console.log("doc.data():", doc.data());
-//         expDataArr.push(new Exp(doc.data()))
-//     });
-
-//     console.log("expDataArr:", expDataArr);
-//     return expDataArr;
-// }
 
 export const getExpCollection = async (user) => {
     const expsQueryRef = query(collection(db, "expenses"), where("UID", "==", user.uid));
@@ -64,18 +43,18 @@ export const getExpCollection = async (user) => {
     return expsDataArr;
 }
 
-export class ExpCollection {
-    constructor(collection) {
-        this.exps = [...collection];
-    }
+// export class ExpCollection {
+//     constructor(collection) {
+//         this.exps = [...collection];
+//     }
 
-    map(callback) {
-        return this.exps.map(callback);
-    }
-    filterType(type) {
-        return this.exps.filter((exp) => exp.type === type);
-    }
-}
+//     map(callback) {
+//         return this.exps.map(callback);
+//     }
+//     filterType(type) {
+//         return this.exps.filter((exp) => exp.type === type);
+//     }
+// }
 
 // const getTxns = async (expRef) => {
 //     const txnsRef = collection(expRef, "txns");
