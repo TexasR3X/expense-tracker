@@ -6,9 +6,17 @@ initializeFirebase();
 export const db = getFirestore();
 
 export const EXP_TYPES = {
-    FOOD: "food",
-    HOUSING: "housing",
+    FOOD: "Food",
+    HOUSING: "Housing",
+    CLOTHES: "Clothes",
     // ......... //
+    forEach(callback) {
+        let i = 0;
+        for (const type of Object.values(this)) {
+            if (typeof type === "function") continue;
+            callback(type, i++);
+        }
+    }
 }
 
 export class Exp {
@@ -61,8 +69,11 @@ export class ExpCollection {
         this.exps = [...collection];
     }
 
-    map() {
-        return this.exps.map();
+    map(callback) {
+        return this.exps.map(callback);
+    }
+    filterType(type) {
+        return this.exps.filter((exp) => exp.type === type);
     }
 }
 
