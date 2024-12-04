@@ -1,14 +1,15 @@
 "use client"
 
-export default function Money({ number, isBalance = false }) {
+export default function Money({ amount, display, isBalance = false }) {
     const formatter = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
     });
 
-    let formattedNumber = formatter.format(number);
+    let formattedAmount = formatter.format(amount);
 
     // if (isBalance && number < 0) formattedNumber = `\u2014 ${formattedNumber}`
 
-    return <span className="">{formattedNumber}</span>;
+    if (display === "block") return <div className="money money-block">{formattedAmount}</div>;
+    else if (display === "inline") return <span className="money money-inline">{formattedAmount}</span>;
 }

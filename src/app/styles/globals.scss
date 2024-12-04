@@ -59,10 +59,14 @@ nav {
 }
 
 .exp-card {
+    margin: 2rem 1rem;
     border: 2px solid #000;
 
     h4 {
         display: flex;
+        align-items: center;
+        background-color: #4a86e8ff;
+        color: #fff;
 
         div {
             flex-grow: 1;
@@ -70,18 +74,25 @@ nav {
         }
     }
 
-    table {
-        border-collapse: collapse;
-
-        td, th {
-            text-align: left;
-            border: 2px solid #000;
-        }
-
-        // caption {
-        //     color: red;
-        // }
+    .exp-row, .exp-empty-message {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 1rem;
+        border-top: 2px solid #000;
     }
+
+    // table {
+    //     border-collapse: collapse;
+
+    //     td, th {
+    //         text-align: left;
+    //         border: 2px solid #000;
+    //     }
+
+    //     // caption {
+    //     //     color: red;
+    //     // }
+    // }
 }
 
 @media (prefers-color-scheme: dark) {

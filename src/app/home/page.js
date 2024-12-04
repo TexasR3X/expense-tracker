@@ -5,6 +5,7 @@ import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 import { Button } from "@mui/material";
 import { Exp, EXP_TYPES, ExpCollection, getExpCollection } from "@/services/database";
 import ExpCard from "@/components/ExpCard";
+import { createRandomID } from "@/services/randomIDs";
 
 export default function Home() {
     const user = useContext(FirebaseAuthContext);
@@ -40,7 +41,7 @@ export default function Home() {
             expCardsArr.push(
                 <ExpCard
                     heading={type}
-                    key={`${type} ExpCard key`}
+                    key={createRandomID()}
                     exps={filteredExps}
                 />
             );

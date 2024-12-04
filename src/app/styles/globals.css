@@ -56,21 +56,24 @@ nav h2 {
 }
 
 .exp-card {
+  margin: 2rem 1rem;
   border: 2px solid #000;
 }
 .exp-card h4 {
   display: flex;
+  align-items: center;
+  background-color: #4a86e8;
+  color: #fff;
 }
 .exp-card h4 div {
   flex-grow: 1;
   text-align: center;
 }
-.exp-card table {
-  border-collapse: collapse;
-}
-.exp-card table td, .exp-card table th {
-  text-align: left;
-  border: 2px solid #000;
+.exp-card .exp-row, .exp-card .exp-empty-message {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  border-top: 2px solid #000;
 }
 
 @media (prefers-color-scheme: dark) {
