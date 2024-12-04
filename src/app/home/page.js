@@ -41,8 +41,12 @@ export default function Home() {
     // }, []);
     
     const expCollection = useMemo(() => {
-        ()();
-    });
+        let returnValue;
+        (async () => {
+            returnValue = new ExpCollection(await getExpCollection(user)); 
+        })();
+        return returnValue;
+    }, [user]);
 
 
 
