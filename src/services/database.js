@@ -7,23 +7,23 @@ export const db = getFirestore();
 
 export const TXN_TYPES = {
     HOUSING: "Housing",
-    CLOTHES: "Clothes",
     TRANSPORTATION: "Transportation",
     FOOD: "Food",
-    INSURANCE: "Insurance",
     DEBT_PAYMENTS: "Debt Payments",
-    SAVINGS_INVESTMENTS: "Savings Investments",
+    SAVINGS: "Savings",
     HEALTHCARE: "Healthcare",
     ENTERTAINMENT: "Entertainment",
     PERSONAL: "Personal",
     EDUCATION: "Education",
-    GIFTS_DONATIONS: "Gifts Donations",
+    GIFTS_AND_DONATIONS: "Gifts and Donations",
     CHILDREN: "Children",
     MISCELLANEOUS: "Miscellaneous",
+    INCOME: "Income",
+    BALANCE: "Balance",
     forEach(callback) {
         let i = 0;
         for (const type of Object.values(this)) {
-            if (typeof type === "function") continue;
+            if (type === TXN_TYPES.BALANCE || typeof type === "function") continue;
             callback(type, i++);
         }
     }
@@ -34,27 +34,47 @@ export class Txn {
         this.name = txnData.name;
         this.type = txnData.type;
         this.amount = txnData.amount;
-        this.timestamp = txnData.timestamp;
+        this.date = txnData.date;
     }
-}
-
-export const getTxnCollection = async (user) => {
-    const txnsQueryRef = query(collection(db, "transactions"), where("UID", "==", user.uid));
-    const txnsQuerySnap = await getDocs(txnsQueryRef);
-    
-    const txnsDataArr = [];
-
-    txnsQuerySnap.forEach((doc) => {
-        console.log("doc.data():", doc.data());
-        txnsDataArr.push(new Txn(doc.data()));
-    });
-
-    console.log("txnsDataArr:", txnsDataArr);
-    return txnsDataArr;
 }
 
 export class TxnGroup {
     constructor(txnArr) {
         this.txns = txnArr;
+        this.length = this.txns.length;
     }
+
+    push(newTxn) {
+        this.txns.push(newTxn);
+        this.length++;
+    }
+    filter(callback) {
+        return new TxnGroup(this.txns.filter(callback));
+    }
+    map(callback) {
+        return this.txns.map(callback);
+    }
+
+    createBalanceTxn() {
+        const balanceAmount = this.txns.reduce((accumulator, currentTxn) => accumulator + currentTxn.amount, 0);
+
+        return new Txn({
+            name: "Balance",
+            type: "Balance",
+            amount: balanceAmount,
+            date: null,
+        });
+    }
+}
+
+export const getTxnCollection = async (user) => {
+    const txnsQueryRef = query(collection(db, "transactions"), where("uid", "==", user.uid));
+    const txnsQuerySnap = await getDocs(txnsQueryRef);
+    
+    const txnsDataArr = [];
+
+    txnsQuerySnap.forEach((doc) => txnsDataArr.push(new Txn(doc.data())));
+
+    console.log("txnsDataArr:", txnsDataArr);
+    return new TxnGroup(txnsDataArr);
 }

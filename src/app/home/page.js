@@ -12,8 +12,7 @@ export default function Home() {
     const [txnCollection, setTxnCollection] = useState(null);
     
     const fetchCollection = async () => {
-        const response = await getTxnCollection(user)
-        // setTxnCollection(new TxnCollection(response));
+        const response = await getTxnCollection(user);
         setTxnCollection(response);
     }
 
@@ -31,14 +30,14 @@ export default function Home() {
     }
 
     const renderTxnCards = () => {
-        console.log("");
-        console.log("TXN_TYPES:", TXN_TYPES);
         const txnCardsArr = [];
 
         TXN_TYPES.forEach((type) => {
-            console.log("type:", type);
             const filteredTxns = txnCollection.filter((txn) => txn.type === type);
-            txnCardsArr.push(
+
+            console.log("filteredTxns:", filteredTxns);
+
+            if (!!filteredTxns.length) txnCardsArr.push(
                 <TxnCard
                     heading={type}
                     key={createRandomID()}
@@ -46,7 +45,6 @@ export default function Home() {
                 />
             );
         });
-        console.log("");
 
         return txnCardsArr;
     }
@@ -55,9 +53,7 @@ export default function Home() {
 
     return (
         <div>
-            <p>
-                Welcome to the page where you track all of your expenses!
-            </p>
+            <p>Welcome to the page where you track all of your expenses!</p>
             
             <Button
                 variant="contained"
