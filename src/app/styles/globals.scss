@@ -74,11 +74,15 @@ nav {
         }
     }
 
-    .txn-row, .txn-empty-message {
+    .txn-row {
         display: flex;
         justify-content: space-between;
         padding: 0.5rem 1rem;
         border-top: 2px solid #000;
+    }
+
+    .txn-overal-data {
+        font-weight: bold;
     }
 
     // table {

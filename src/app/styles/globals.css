@@ -69,11 +69,14 @@ nav h2 {
   flex-grow: 1;
   text-align: center;
 }
-.txn-card .txn-row, .txn-card .txn-empty-message {
+.txn-card .txn-row {
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 1rem;
   border-top: 2px solid #000;
+}
+.txn-card .txn-overal-data {
+  font-weight: bold;
 }
 
 @media (prefers-color-scheme: dark) {

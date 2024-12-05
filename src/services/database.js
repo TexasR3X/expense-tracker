@@ -47,7 +47,7 @@ export class TxnGroup {
         this.txns = txnArr.map((txn) => new Txn(txn));
         // this.txns = txnArr;
         this.length = this.txns.length;
-        this.balance = this.txns.reduce((accumulator, currentTxn) => accumulator + currentTxn.amount, 0);
+        this.total = this.txns.reduce((accumulator, currentTxn) => accumulator + currentTxn.amount, 0);
     }
 
     push(newTxn) {
@@ -58,7 +58,7 @@ export class TxnGroup {
         this.txns.push(newTxn);
 
         this.length++;
-        this.balance += addedAmount;
+        this.total += addedAmount;
     }
     filter(callback) {
         return new TxnGroup(this.txns.filter(callback));
