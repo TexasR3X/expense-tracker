@@ -3,18 +3,18 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { collection, addDoc, getDocs, doc, getDoc, setDoc, query, where } from "firebase/firestore";
 import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 import { Button } from "@mui/material";
-import { Exp, EXP_TYPES, ExpCollection, getExpCollection } from "@/services/database";
-import ExpCard from "@/components/ExpCard";
+import { Txn, TXN_TYPES, TxnCollection, getTxnCollection } from "@/services/database";
+import TxnCard from "@/components/TxnCard";
 import { createRandomID } from "@/services/randomIDs";
 
 export default function Home() {
     const user = useContext(FirebaseAuthContext);
-    const [expCollection, setExpCollection] = useState(null);
+    const [txnCollection, setTxnCollection] = useState(null);
     
     const fetchCollection = async () => {
-        const response = await getExpCollection(user)
-        // setExpCollection(new ExpCollection(response));
-        setExpCollection(response);
+        const response = await getTxnCollection(user)
+        // setTxnCollection(new TxnCollection(response));
+        setTxnCollection(response);
     }
 
     useEffect(() => {
@@ -23,35 +23,35 @@ export default function Home() {
 
     const testFn = async () => {
         try {
-            console.log("expCollection:", expCollection);
+            console.log("txnCollection:", txnCollection);
         }
         catch (e) {
             console.error("e:", e);
         }
     }
 
-    const renderExpCards = () => {
+    const renderTxnCards = () => {
         console.log("");
-        console.log("EXP_TYPES:", EXP_TYPES);
-        const expCardsArr = [];
+        console.log("TXN_TYPES:", TXN_TYPES);
+        const txnCardsArr = [];
 
-        EXP_TYPES.forEach((type) => {
+        TXN_TYPES.forEach((type) => {
             console.log("type:", type);
-            const filteredExps = expCollection.filter((exp) => exp.type === type);
-            expCardsArr.push(
-                <ExpCard
+            const filteredTxns = txnCollection.filter((txn) => txn.type === type);
+            txnCardsArr.push(
+                <TxnCard
                     heading={type}
                     key={createRandomID()}
-                    exps={filteredExps}
+                    txns={filteredTxns}
                 />
             );
         });
         console.log("");
 
-        return expCardsArr;
+        return txnCardsArr;
     }
 
-    console.log("expCollection:", expCollection);
+    console.log("txnCollection:", txnCollection);
 
     return (
         <div>
@@ -66,7 +66,7 @@ export default function Home() {
                 Test
             </Button>
 
-            {!!expCollection ? renderExpCards() : null}
+            {!!txnCollection ? renderTxnCards() : null}
         </div>
     );
 }

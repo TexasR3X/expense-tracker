@@ -1,5 +1,3 @@
-"use client"
-
 export default function Money({ amount, display, isBalance = false }) {
     const formatter = new Intl.NumberFormat("en-US", {
         style: "currency",

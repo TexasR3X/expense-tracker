@@ -55,21 +55,21 @@ nav h2 {
   flex-grow: 1;
 }
 
-.exp-card {
+.txn-card {
   margin: 2rem 1rem;
   border: 2px solid #000;
 }
-.exp-card h4 {
+.txn-card h4 {
   display: flex;
   align-items: center;
   background-color: #4a86e8;
   color: #fff;
 }
-.exp-card h4 div {
+.txn-card h4 div {
   flex-grow: 1;
   text-align: center;
 }
-.exp-card .exp-row, .exp-card .exp-empty-message {
+.txn-card .txn-row, .txn-card .txn-empty-message {
   display: flex;
   justify-content: space-between;
   padding: 0.5rem 1rem;

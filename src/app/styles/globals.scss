@@ -58,7 +58,7 @@ nav {
     }
 }
 
-.exp-card {
+.txn-card {
     margin: 2rem 1rem;
     border: 2px solid #000;
 
@@ -74,7 +74,7 @@ nav {
         }
     }
 
-    .exp-row, .exp-empty-message {
+    .txn-row, .txn-empty-message {
         display: flex;
         justify-content: space-between;
         padding: 0.5rem 1rem;

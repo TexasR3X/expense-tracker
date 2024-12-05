@@ -5,11 +5,21 @@ import { initializeFirebase } from "./firebase";
 initializeFirebase();
 export const db = getFirestore();
 
-export const EXP_TYPES = {
-    FOOD: "Food",
+export const TXN_TYPES = {
     HOUSING: "Housing",
     CLOTHES: "Clothes",
-    // ......... //
+    TRANSPORTATION: "Transportation",
+    FOOD: "Food",
+    INSURANCE: "Insurance",
+    DEBT_PAYMENTS: "Debt Payments",
+    SAVINGS_INVESTMENTS: "Savings Investments",
+    HEALTHCARE: "Healthcare",
+    ENTERTAINMENT: "Entertainment",
+    PERSONAL: "Personal",
+    EDUCATION: "Education",
+    GIFTS_DONATIONS: "Gifts Donations",
+    CHILDREN: "Children",
+    MISCELLANEOUS: "Miscellaneous",
     forEach(callback) {
         let i = 0;
         for (const type of Object.values(this)) {
@@ -19,72 +29,32 @@ export const EXP_TYPES = {
     }
 }
 
-export class Exp {
-    constructor(expData) {
-        this.name = expData.name;
-        this.type = expData.type;
-        this.amount = expData.amount;
-        this.timestamp = expData.timestamp;
+export class Txn {
+    constructor(txnData) {
+        this.name = txnData.name;
+        this.type = txnData.type;
+        this.amount = txnData.amount;
+        this.timestamp = txnData.timestamp;
     }
 }
 
-export const getExpCollection = async (user) => {
-    const expsQueryRef = query(collection(db, "expenses"), where("UID", "==", user.uid));
-    const expsQuerySnap = await getDocs(expsQueryRef);
+export const getTxnCollection = async (user) => {
+    const txnsQueryRef = query(collection(db, "transactions"), where("UID", "==", user.uid));
+    const txnsQuerySnap = await getDocs(txnsQueryRef);
     
-    const expsDataArr = [];
+    const txnsDataArr = [];
 
-    expsQuerySnap.forEach((doc) => {
+    txnsQuerySnap.forEach((doc) => {
         console.log("doc.data():", doc.data());
-        expsDataArr.push(new Exp(doc.data()));
+        txnsDataArr.push(new Txn(doc.data()));
     });
 
-    console.log("expsDataArr:", expsDataArr);
-    return expsDataArr;
+    console.log("txnsDataArr:", txnsDataArr);
+    return txnsDataArr;
 }
 
-// export class ExpCollection {
-//     constructor(collection) {
-//         this.exps = [...collection];
-//     }
-
-//     map(callback) {
-//         return this.exps.map(callback);
-//     }
-//     filterType(type) {
-//         return this.exps.filter((exp) => exp.type === type);
-//     }
-// }
-
-// const getTxns = async (expRef) => {
-//     const txnsRef = collection(expRef, "txns");
-//     const txnsSnap = await getDocs(txnsRef);
-
-//     const txnsObj = {};
-
-//     txnsSnap.forEach((doc) => {
-//         txnsObj[doc.id] = { ...doc.data() };
-//     });
-
-//     return txnsObj;
-// }
-// const getExpData = async (expID, user) => {
-//     console.log("database.js: user:", user);
-
-//     const uid = user?.uid;
-//     if (!uid) throw new Error(`Invalid type for user\n\tuser = ${user}\n`);
-
-//     const expRef = doc(db, expID, uid);
-//     const expSnap = await getDoc(expRef);
-
-//     // console.log("expSnap:", expSnap);
-
-//     // console.log("D:", (await getDoc(doc(docRef, "txns", "KO8xUus8DV7SA8gYwYjm"))).data());
-//     // getTxnsFromExp(collection(docRef, "txns"));
-    
-//     if (expSnap.exists()) return [expRef, expSnap.data()];
-//     else {
-//         console.error("expSnap.exists() === false")
-//         return null;
-//     }
-// }
+export class TxnGroup {
+    constructor(txnArr) {
+        this.txns = txnArr;
+    }
+}
