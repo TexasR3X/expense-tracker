@@ -5,9 +5,22 @@ import { initializeFirebase } from "./firebase";
 initializeFirebase();
 export const db = getFirestore();
 
+// "transactions"
+
+export const fetchCollection = async (user, collectionID) => {
+    const queryRef = query(collection(db, collectionID), where("uid", "==", user.uid));
+    const querySnap = await getDocs(queryRef);
+
+    const dataArr = [];
+    querySnap.forEach((doc) => dataArr.push(doc.data()));
+
+    return dataArr;
+}
+
+
 export const TXN_TYPES = {
     HOUSING: "Housing",
-    TRANSPORTATION: "Transportation",
+    GAS: "Gas",
     FOOD: "Food",
     DEBT_PAYMENTS: "Debt Payments",
     SAVINGS: "Savings",
@@ -19,7 +32,7 @@ export const TXN_TYPES = {
     CHILDREN: "Children",
     MISCELLANEOUS: "Miscellaneous",
     INCOME: "Income",
-    BALANCE: "Balance",
+    // BALANCE: "Balance",
     forEach(callback) {
         let i = 0;
         for (const type of Object.values(this)) {
@@ -27,6 +40,43 @@ export const TXN_TYPES = {
             callback(type, i++);
         }
     }
+}
+
+export class TxnGroup {
+    constructor(txnArr) {
+        this.txns = txnArr.map((txn) => new Txn(txn));
+        // this.txns = txnArr;
+        this.length = this.txns.length;
+        this.balance = this.txns.reduce((accumulator, currentTxn) => accumulator + currentTxn.amount, 0);
+    }
+
+    push(newTxn) {
+        newTxn = new Txn(newTxn);
+
+        const addedAmount = newTxn.amount;
+
+        this.txns.push(newTxn);
+
+        this.length++;
+        this.balance += addedAmount;
+    }
+    filter(callback) {
+        return new TxnGroup(this.txns.filter(callback));
+    }
+    map(callback) {
+        return this.txns.map(callback);
+    }
+
+    // createBalanceTxn() {
+    //     const balanceAmount = this.txns.reduce((accumulator, currentTxn) => accumulator + currentTxn.amount, 0);
+
+    //     return new Txn({
+    //         name: "Balance",
+    //         type: "Balance",
+    //         amount: balanceAmount,
+    //         date: null,
+    //     });
+    // }
 }
 
 export class Txn {
@@ -38,43 +88,31 @@ export class Txn {
     }
 }
 
-export class TxnGroup {
-    constructor(txnArr) {
-        this.txns = txnArr;
-        this.length = this.txns.length;
+// export const getTxnCollection = async (user) => {
+//     const txnsQueryRef = query(collection(db, "transactions"), where("uid", "==", user.uid));
+//     const txnsQuerySnap = await getDocs(txnsQueryRef);
+    
+//     const txnsDataArr = [];
+
+//     txnsQuerySnap.forEach((doc) => txnsDataArr.push(new Txn(doc.data())));
+
+//     console.log("txnsDataArr:", txnsDataArr);
+//     return new TxnGroup(txnsDataArr);
+// }
+
+export class GoalGroup {
+    constructor(goalArr) {
+        this.goals = goalArr.map((goal) => new Goal(goal));
     }
 
-    push(newTxn) {
-        this.txns.push(newTxn);
-        this.length++;
-    }
-    filter(callback) {
-        return new TxnGroup(this.txns.filter(callback));
-    }
-    map(callback) {
-        return this.txns.map(callback);
-    }
-
-    createBalanceTxn() {
-        const balanceAmount = this.txns.reduce((accumulator, currentTxn) => accumulator + currentTxn.amount, 0);
-
-        return new Txn({
-            name: "Balance",
-            type: "Balance",
-            amount: balanceAmount,
-            date: null,
-        });
+    getGoal(type) {
+        return this.goals.find((goal) => goal.type === type) ?? null;
     }
 }
 
-export const getTxnCollection = async (user) => {
-    const txnsQueryRef = query(collection(db, "transactions"), where("uid", "==", user.uid));
-    const txnsQuerySnap = await getDocs(txnsQueryRef);
-    
-    const txnsDataArr = [];
-
-    txnsQuerySnap.forEach((doc) => txnsDataArr.push(new Txn(doc.data())));
-
-    console.log("txnsDataArr:", txnsDataArr);
-    return new TxnGroup(txnsDataArr);
+export class Goal {
+    constructor(goalData) {
+        this.amount = goalData.amount;
+        this.type = goalData.type;
+    }
 }

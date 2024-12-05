@@ -5,9 +5,8 @@ import Money from "@/components/Money";
 import TxnRow from './TxnRow';
 import { createRandomID } from '@/services/randomIDs';
 
-export default function TxnCard({ heading, txns }) {
-    console.log("txns:", txns);
-    console.log("txns.createBalanceTxn():", txns.createBalanceTxn());
+export default function TxnCard({ heading, txns, goal }) {
+    console.log("goal:", goal);
 
     return (
         <div className="txn-card">
@@ -17,8 +16,10 @@ export default function TxnCard({ heading, txns }) {
             </h4>
 
             <div>
-                {txns.map((txn) => <TxnRow txn={txn} key={createRandomID()}/>)}
-                <TxnRow txn={txns.createBalanceTxn()} key={createRandomID()}/>
+                {txns.map((txn) => <TxnRow data={txn} key={createRandomID()}/>)}
+                {/* <TxnRow txn={txns.createBalanceTxn()} key={createRandomID()}/> */}
+
+
             </div>
         </div>
     );
