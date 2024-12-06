@@ -1,6 +1,7 @@
 "use client";
 import { collection, addDoc, getDocs, doc, getDoc, setDoc, where, query, getFirestore } from "firebase/firestore";
 import { initializeFirebase } from "./firebase";
+import { createRandomID } from "./randomIDs";
 
 initializeFirebase();
 export const db = getFirestore();
@@ -17,6 +18,9 @@ export const fetchCollection = async (user, collectionID) => {
     return dataArr;
 }
 
+// const pushData = async (user, collectionID, thisArg) => {
+    
+// }
 
 export const TXN_TYPES = {
     HOUSING: "Housing",
@@ -50,33 +54,22 @@ export class TxnGroup {
         this.total = this.txns.reduce((accumulator, currentTxn) => accumulator + currentTxn.amount, 0);
     }
 
-    push(newTxn) {
-        newTxn = new Txn(newTxn);
+    // push(newTxn) {
+    //     newTxn = new Txn(newTxn);
 
-        const addedAmount = newTxn.amount;
+    //     const addedAmount = newTxn.amount;
 
-        this.txns.push(newTxn);
+    //     this.txns.push(newTxn);
 
-        this.length++;
-        this.total += addedAmount;
-    }
+    //     this.length++;
+    //     this.total += addedAmount;
+    // }
     filter(callback) {
         return new TxnGroup(this.txns.filter(callback));
     }
     map(callback) {
         return this.txns.map(callback);
     }
-
-    // createBalanceTxn() {
-    //     const balanceAmount = this.txns.reduce((accumulator, currentTxn) => accumulator + currentTxn.amount, 0);
-
-    //     return new Txn({
-    //         name: "Balance",
-    //         type: "Balance",
-    //         amount: balanceAmount,
-    //         date: null,
-    //     });
-    // }
 }
 
 export class Txn {
@@ -85,6 +78,16 @@ export class Txn {
         this.type = txnData.type;
         this.amount = txnData.amount;
         this.date = txnData.date;
+    }
+
+    async pushToDB(user) {
+        await setDoc(doc(db, "transactions", createRandomID()), {
+            name: this.name,
+            type: this.type,
+            amount: this.amount,
+            date: this.date,
+            uid: user.uid,
+        });
     }
 }
 
@@ -112,7 +115,14 @@ export class GoalGroup {
 
 export class Goal {
     constructor(goalData) {
-        this.amount = goalData.amount;
         this.type = goalData.type;
+        this.amount = goalData.amount;
+    }
+
+    async pushToDB(user) {
+        await setDoc(doc(db, "goals", createRandomID()), {
+            type: this.type,
+            amount: this.amount,
+        });
     }
 }

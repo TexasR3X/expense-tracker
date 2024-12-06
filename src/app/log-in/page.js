@@ -7,7 +7,7 @@ import {
   signUpWithEmailAndPassword,
 } from "@/services/firebase";
 import Button from "@mui/material/Button";
-import LoginModal, { MODAL_TYPES } from "@/components/LoginModal";
+import LoginModal, { LOGIN_MODAL_TYPES } from "@/components/LoginModal";
 import { useRouter } from "next/router";
 
 export default function LogIn() {
@@ -17,11 +17,11 @@ export default function LogIn() {
 
     const handleLogIn = () => {
         setModalOpen(true);
-        setModalType(MODAL_TYPES.LOG_IN);
+        setModalType(LOGIN_MODAL_TYPES.LOG_IN);
     }
     const handleSignUp = () => {
         setModalOpen(true);
-        setModalType(MODAL_TYPES.SIGN_UP);
+        setModalType(LOGIN_MODAL_TYPES.SIGN_UP);
     }
 
     return (

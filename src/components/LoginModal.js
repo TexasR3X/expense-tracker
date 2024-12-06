@@ -10,7 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Alert from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 
-export const MODAL_TYPES = {
+export const LOGIN_MODAL_TYPES = {
     LOG_IN: "LOG_IN",
     SIGN_UP: "SIGN_UP",
 }
@@ -87,7 +87,7 @@ export default function LoginModal({ type, setModalOpen }) {
                     return {
                         ...userData,
                         password: "",
-                        verifyPassword: type === MODAL_TYPES.SIGN_UP ? "" : null,
+                        verifyPassword: type === LOGIN_MODAL_TYPES.SIGN_UP ? "" : null,
                     }
                 }
                 default: {
@@ -96,10 +96,10 @@ export default function LoginModal({ type, setModalOpen }) {
             }
         },
         {
-            userName: type === MODAL_TYPES.SIGN_UP ? "" : null,
+            userName: type === LOGIN_MODAL_TYPES.SIGN_UP ? "" : null,
             email: "",
             password: "",
-            verifyPassword: type === MODAL_TYPES.SIGN_UP ? "" : null,
+            verifyPassword: type === LOGIN_MODAL_TYPES.SIGN_UP ? "" : null,
         }
     );
     // const router = useNavigation();
@@ -157,7 +157,7 @@ export default function LoginModal({ type, setModalOpen }) {
             });
             return;
         }
-        if (userData.password !== userData.verifyPassword && type === MODAL_TYPES.SIGN_UP) {
+        if (userData.password !== userData.verifyPassword && type === LOGIN_MODAL_TYPES.SIGN_UP) {
             dispatchAlert({
                 type: ALERT_ACTIONS.SHOW_ALERT,
                 message: LOGIN_ERRORS.UNEQUAL_PASSWORDS.OUTPUT_MESSAGE,
@@ -166,8 +166,8 @@ export default function LoginModal({ type, setModalOpen }) {
         }
         
         let errorInputMessage;
-        if (type === MODAL_TYPES.LOG_IN) errorInputMessage = await logInWithEmailAndPassword(userData.email, userData.password);
-        else if (type === MODAL_TYPES.SIGN_UP) errorInputMessage = await signUpWithEmailAndPassword(userData.email, userData.password);
+        if (type === LOGIN_MODAL_TYPES.LOG_IN) errorInputMessage = await logInWithEmailAndPassword(userData.email, userData.password);
+        else if (type === LOGIN_MODAL_TYPES.SIGN_UP) errorInputMessage = await signUpWithEmailAndPassword(userData.email, userData.password);
 
         if (errorInputMessage !== null) {
             // Firebase error handling:
@@ -191,8 +191,8 @@ export default function LoginModal({ type, setModalOpen }) {
 
     const welcomeMessage = useMemo(() => {
         return (
-            type === MODAL_TYPES.LOG_IN ? "Log In" :
-            type === MODAL_TYPES.SIGN_UP ? "Sign Up" :
+            type === LOGIN_MODAL_TYPES.LOG_IN ? "Log In" :
+            type === LOGIN_MODAL_TYPES.SIGN_UP ? "Sign Up" :
             null
         )
     }, []);
@@ -215,7 +215,7 @@ export default function LoginModal({ type, setModalOpen }) {
                 <h3>{welcomeMessage}</h3>
                 
                 {
-                    type === MODAL_TYPES.SIGN_UP ? (
+                    type === LOGIN_MODAL_TYPES.SIGN_UP ? (
                         <TextField
                             label="User Name"
                             id="user-name"
@@ -246,7 +246,7 @@ export default function LoginModal({ type, setModalOpen }) {
                 />
 
                 {
-                    type === MODAL_TYPES.SIGN_UP ? (
+                    type === LOGIN_MODAL_TYPES.SIGN_UP ? (
                         <TextField
                             label="Re-enter Password"
                             id="verify-password"

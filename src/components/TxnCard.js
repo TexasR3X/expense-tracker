@@ -1,12 +1,18 @@
 "use client";
+import { useState } from 'react';
 import { db } from '@/services/database';
 import AddIcon from '@mui/icons-material/Add';
-import Money from "@/components/Money";
 import TxnRow, { TXN_ROW_INPUT_TYPES } from './TxnRow';
 import { createRandomID } from '@/services/randomIDs';
+import FormModal from './FormModal';
+import Money from "@/components/Money";
+import TextField from '@mui/material/TextField';
 
 export default function TxnCard({ heading, txns, goal }) {
-    console.log("goal:", goal);
+    const [modalOpen, setModalOpen] = useState(false);
+    
+
+    const handleAddIconClick = () => setModalOpen(true);
 
     const total = txns.total;
     const difference = goal?.amount - total;
@@ -15,7 +21,9 @@ export default function TxnCard({ heading, txns, goal }) {
         <div className="txn-card">
             <h4>
                 <div>{heading}</div>
-                <AddIcon/>
+                <AddIcon
+                    onClick={handleAddIconClick}
+                />
             </h4>
 
             <div>
@@ -26,7 +34,6 @@ export default function TxnCard({ heading, txns, goal }) {
                         key={createRandomID()}
                     />
                 ))}
-                {/* <TxnRow txn={txns.createBalanceTxn()} key={createRandomID()}/> */}
                 <TxnRow
                     data={goal}
                     inputType={TXN_ROW_INPUT_TYPES.GOAL}
@@ -43,6 +50,29 @@ export default function TxnCard({ heading, txns, goal }) {
                     key={createRandomID()}
                 />
             </div>
+
+            {modalOpen ? (
+                <FormModal
+                    heading="My Heading"
+                >
+                    <TextField
+                        label="Transaction Name"
+                        id="input-txn-name"
+                        type="text"
+                        // value={userData.email}
+                        // onChange={(event) => handleUpdateEmail(event.target.value)}
+                        variant="outlined"
+                    />
+                    <TextField
+                        label="Amount"
+                        id="input-amount"
+                        type="text"
+                        // value={userData.email}
+                        // onChange={(event) => handleUpdateEmail(event.target.value)}
+                        variant="outlined"
+                    />
+                </FormModal>
+            ) : null}
         </div>
     );
 }
