@@ -68,7 +68,7 @@ export default function Home() {
 
             if (!!filteredTxns.length) txnCardsArr.push(
                 <TxnCard
-                    heading={type}
+                    type={type}
                     key={createRandomID()}
                     txns={filteredTxns}
                     goal={goalCollection.getGoal(type)}

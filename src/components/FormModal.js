@@ -20,7 +20,7 @@ const reducerFn = (inputValues, action) => {
     }
 }
 
-export default function FormModal({ heading, closeFn, children }) {
+export default function FormModal({ heading, isOpen, closeModalFn, children }) {
     const [inputValues, dispatch] = useReducer();
 
     console.log("children:", children);
@@ -30,29 +30,29 @@ export default function FormModal({ heading, closeFn, children }) {
 
     console.log("T:", <TextField {...children[0].props}/>);
 
-    return (
+    return isOpen ? (
         <Modal
             open
-            onClose={closeFn}
+            onClose={closeModalFn}
         >
-            <Box>
+            <Box className="modal-box">
                 <div>
                     <h3>{heading}</h3>
                     
                     <IconButton
                         aria-label="close"
-                        onClick={closeFn}
+                        onClick={closeModalFn}
                     >
                         <CloseIcon/>
                     </IconButton>
                 </div>
 
-                <div>
+                <div className="text-field-container">
                     {children}
                 </div>
             </Box>
         </Modal>
-    );
+    ) : null;
 }
 
 // Example:
