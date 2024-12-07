@@ -56,7 +56,8 @@ export default function TxnCard({ type, txns, goal }) {
             >
                 <TextField
                     label="Transaction Name"
-                    id="input-txn-name"
+                    id={createRandomID()}
+                    key={createRandomID()}
                     type="text"
                     // value={userData.email}
                     // onChange={(event) => handleUpdateEmail(event.target.value)}
@@ -64,7 +65,8 @@ export default function TxnCard({ type, txns, goal }) {
                 />
                 <TextField
                     label="Amount"
-                    id="input-amount"
+                    id={createRandomID()}
+                    key={createRandomID()}
                     type="text"
                     // value={userData.email}
                     // onChange={(event) => handleUpdateEmail(event.target.value)}
