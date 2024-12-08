@@ -1,7 +1,7 @@
 "use client";
 import { collection, addDoc, getDocs, doc, getDoc, setDoc, where, query, getFirestore } from "firebase/firestore";
 import { initializeFirebase } from "./firebase";
-import { createRandomID } from "./createRandomID";
+import createRandomID from "./createRandomID";
 
 initializeFirebase();
 export const db = getFirestore();

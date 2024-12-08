@@ -5,7 +5,7 @@ import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 import { Button } from "@mui/material";
 import { Txn, TXN_TYPES, TxnCollection, fetchCollection, TxnGroup, GoalGroup, db } from "@/services/database";
 import TxnCard from "@/components/TxnCard";
-import { createRandomID } from "@/services/createRandomID";
+import createRandomID from "@/services/createRandomID";
 import useDBData from "@/hooks/useDBData";
 
 export default function Home() {

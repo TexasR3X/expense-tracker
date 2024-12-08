@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useMemo, useReducer, useRef } from "react";
 import createRandomID from "@/services/createRandomID";
 
 const ACTION_TYPES = {
@@ -16,10 +16,18 @@ const ACTION_TYPES = {
 const reducerFn = (inputValues, action) => {
     switch (action.type) {
         case ACTION_TYPES.RESET_VALUES: {
-            return Array.from({ length: action.length }).map(() => "");
+            console.log("RESET_VALUES inputValues:", inputValues);
+
+            return Array.from({ length: inputValues.length }).map(() => "");
         }
         case ACTION_TYPES.UPDATE_VALUE: {
+            console.log("UPDATE_VALUE action.newValue:", action.newValue);
+            console.log("UPDATE_VALUE action.index:", action.index);
+
             inputValues[action.index] = action.newValue;
+
+            console.log("UPDATE_VALUE inputValues:", inputValues);
+
             return inputValues;
         }
     }
@@ -33,10 +41,7 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
     console.log("inputValues:", inputValues);
 
     useEffect(() => {
-        if (isOpen) dispatch({
-            type: ACTION_TYPES.RESET_VALUES,
-            length: inputRefs.length,
-        });
+        if (isOpen) dispatch({ type: ACTION_TYPES.RESET_VALUES });
     }, [isOpen]);
 
     const updateInputValue = (newValue, index) => {
@@ -49,6 +54,36 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
             index,
         });
     };
+
+    const textFieldKeys = useMemo(() => {
+        return Array.from({ length: inputValues.length }).map(() => createRandomID());
+    }, []);
+
+    const renderTextFields = () => {
+        return textFieldData.map((data, i) => {
+            console.log("inputValues[i]:", inputValues[i]);
+
+            const elm = (
+                <TextField
+                    type="text"
+                    {...data}
+                    id={textFieldKeys[i]}
+                    key={textFieldKeys[i]}
+                    ref={(input) => inputRefs.current[i] = input}
+                    onChange={(event) => updateInputValue(event.target.value, i)}
+                    value={inputValues[i]}
+                />
+            );
+
+            console.log("elm:", elm);
+
+            return elm;
+        });
+    }
+
+    const handleSubmit = () => {
+
+    }
 
     return isOpen ? (
         <Modal
@@ -71,22 +106,12 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
                     className="text-field-container"
                     key={createRandomID()}
                 >
-                    {textFieldData.map((data, i) => (
-                        <TextField
-                            type="text"
-                            {...data}
-                            id={createRandomID()}
-                            key={createRandomID()}
-                            ref={(input) => inputRefs.current[i] = input}
-                            value={inputValues[i]}
-                            onChange={(event) => updateInputValue(event.target.value, i)}
-                        />
-                    ))}
+                    {renderTextFields()}
                 </div>
 
                 <Button
                     variant="contained"
-                    onClick={handleLogin}
+                    onClick={handleSubmit}
                 >
                     {submitLabel}
                 </Button>
