@@ -24,10 +24,15 @@ const reducerFn = (inputValues, action) => {
             console.log("UPDATE_VALUE action.newValue:", action.newValue);
             console.log("UPDATE_VALUE action.index:", action.index);
 
-            inputValues[action.index] = action.newValue;
+            const newInputValues = [...inputValues]
 
-            console.log("UPDATE_VALUE inputValues:", inputValues);
+            newInputValues[action.index] = action.newValue;
 
+            console.log("UPDATE_VALUE newInputValues:", newInputValues);
+
+            return newInputValues;
+        }
+        default: {
             return inputValues;
         }
     }
@@ -38,10 +43,10 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
     const [inputValues, dispatch] = useReducer(reducerFn, Array.from({ length: textFieldData.length }).map(() => ""));
 
     console.log("inputRefs:", inputRefs);
-    console.log("inputValues:", inputValues);
+    console.log("0 inputValues:", inputValues);
 
     useEffect(() => {
-        if (isOpen) dispatch({ type: ACTION_TYPES.RESET_VALUES });
+        dispatch({ type: ACTION_TYPES.RESET_VALUES });
     }, [isOpen]);
 
     const updateInputValue = (newValue, index) => {
@@ -85,6 +90,8 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
 
     }
 
+    console.log("1 inputValues:", inputValues);
+
     return isOpen ? (
         <Modal
             open
@@ -108,6 +115,8 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
                 >
                     {renderTextFields()}
                 </div>
+
+                inputValues: {inputValues.join(", ")}
 
                 <Button
                     variant="contained"
