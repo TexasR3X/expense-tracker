@@ -6,7 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import { useEffect, useReducer, useRef } from "react";
-import { createRandomID } from "@/services/randomIDs";
+import createRandomID from "@/services/createRandomID";
 
 const ACTION_TYPES = {
     RESET_VALUES: "RESET_VALUES",
@@ -25,7 +25,7 @@ const reducerFn = (inputValues, action) => {
     }
 }
 
-export default function FormModal({ heading, isOpen, closeModalFn, textFieldData }) {
+export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, textFieldData }) {
     const inputRefs = useRef([]);
     const [inputValues, dispatch] = useReducer(reducerFn, Array.from({ length: textFieldData.length }).map(() => ""));
 
@@ -84,7 +84,12 @@ export default function FormModal({ heading, isOpen, closeModalFn, textFieldData
                     ))}
                 </div>
 
-                <Button></Button>
+                <Button
+                    variant="contained"
+                    onClick={handleLogin}
+                >
+                    {submitLabel}
+                </Button>
             </Box>
         </Modal>
     ) : <></>;

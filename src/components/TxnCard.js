@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { db } from '@/services/database';
 import AddIcon from '@mui/icons-material/Add';
 import TxnRow, { TXN_ROW_INPUT_TYPES } from './TxnRow';
-import { createRandomID } from '@/services/randomIDs';
+import createRandomID from '@/services/createRandomID';
 import FormModal from './FormModal';
 import Money from "@/components/Money";
 import TextField from '@mui/material/TextField';

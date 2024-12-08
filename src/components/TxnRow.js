@@ -1,7 +1,7 @@
 "use client";
 import { Goal, Txn, TXN_TYPES } from "@/services/database";
 import Money from "./Money";
-import { createRandomID } from "@/services/randomIDs";
+import { createRandomID } from "@/services/createRandomID";
 
 export const TXN_ROW_INPUT_TYPES = {
     TXN: "TXN",
