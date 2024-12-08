@@ -50,6 +50,7 @@ export default function TxnCard({ type, txns, goal }) {
                 />
             </div>
 
+
             <FormModal
                 heading={`Add New ${type} Transaction`}
                 submitLabel="Add Transaction"
@@ -58,14 +59,16 @@ export default function TxnCard({ type, txns, goal }) {
                 textFieldData={[
                     {
                         label: "Transaction Name",
-                        type: "text",
                     },
                     {
                         label: "Amount",
-                        type: "number",
+                        // type: "number",
                         slotProps: { input: { startAdornment: <InputAdornment position="start">$</InputAdornment> } }
                     }
                 ]}
+                verifyFn={(inputValues) => {
+                    console.log("v inputValues:", inputValues);
+                }}
             />
 
             {/* <FormModal

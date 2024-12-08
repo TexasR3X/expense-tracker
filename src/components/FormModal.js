@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
-import { useEffect, useMemo, useReducer, useRef } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import createRandomID from "@/services/createRandomID";
 
 const ACTION_TYPES = {
@@ -38,9 +38,10 @@ const reducerFn = (inputValues, action) => {
     }
 }
 
-export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, textFieldData }) {
+export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, textFieldData, verifyFn }) {
     const inputRefs = useRef([]);
     const [inputValues, dispatch] = useReducer(reducerFn, Array.from({ length: textFieldData.length }).map(() => ""));
+    const [selectInput, setSelectInput] = useState(null);
 
     console.log("inputRefs:", inputRefs);
     console.log("0 inputValues:", inputValues);
@@ -53,6 +54,7 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
         console.log("newValue:", newValue);
         console.log("index:", index);
 
+        setSelectInput(inputRefs.current[index]);
         dispatch({
             type: ACTION_TYPES.UPDATE_VALUE,
             newValue,
@@ -86,8 +88,14 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
         });
     }
 
-    const handleSubmit = () => {
+    // useEffect(() => {
+    //     console.log("e selectInput:", selectInput);
+    //     console.log("e selectInput?.children[1]?.children[0]:", selectInput?.children[1]?.children[0]);
+    //     if (!!selectInput) selectInput.children[1].children[0].focus();
+    // }, [selectInput]);
 
+    const handleSubmit = () => {
+        verifyFn(inputValues);
     }
 
     console.log("1 inputValues:", inputValues);
@@ -95,6 +103,7 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
     return isOpen ? (
         <Modal
             open
+            disableAutoFocus
             onClose={closeModalFn}
         >
             <Box className="modal-box">
