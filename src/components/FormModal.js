@@ -66,9 +66,12 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
         return Array.from({ length: inputValues.length }).map(() => createRandomID());
     }, []);
 
+    const onEnterKey = (event) => {
+        if (event.key === "Enter") event.target.blur();
+    }
+
     const renderTextFields = () => {
         return textFieldData.map((data, i) => {
-            console.log("inputValues[i]:", inputValues[i]);
 
             const elm = (
                 <TextField
@@ -78,15 +81,10 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
                     key={textFieldKeys[i]}
                     ref={(input) => inputRefs.current[i] = input}
                     onBlur={(event) => updateInputValue(event.target.value, i)}
-                    onKeyDown={(event) => {
-                        console.log("event.key:", event.key);
-                        if (event.key === "Enter") event.target.blur();
-                    }}
+                    onKeyDown={onEnterKey}
                     defaultValue={inputValues[i]}
                 />
             );
-
-            console.log("elm:", elm);
 
             return elm;
         });
@@ -131,6 +129,7 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
                 </form>
 
                 inputValues: {inputValues.join(", ")}
+                <br/>
 
                 <Button
                     variant="contained"
