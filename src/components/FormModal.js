@@ -1,10 +1,11 @@
 "use client";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
 import CloseIcon from "@mui/icons-material/Close";
 import Modal from "@mui/material/Modal";
-import { useEffect, useMemo, useReducer } from "react";
+import TextField from "@mui/material/TextField";
+import { useEffect, useReducer, useRef } from "react";
 import { createRandomID } from "@/services/randomIDs";
 
 const ACTION_TYPES = {
@@ -24,68 +25,44 @@ const reducerFn = (inputValues, action) => {
     }
 }
 
-export default function FormModal({ heading, isOpen, closeModalFn, children }) {
-    const [inputValues, dispatch] = useReducer(reducerFn, []);
+export default function FormModal({ heading, isOpen, closeModalFn, textFieldData }) {
+    // const numOfTextFields = useMemo(() => textFieldData.length);
+    const inputRefs = useRef([]);
+    const [inputValues, dispatch] = useReducer(reducerFn, Array.from({ length: textFieldData.length }).map(() => ""));
 
-    const textFields = useMemo(() => {
-        children = Array.isArray(children) ? children : [children];
+    console.log("inputRefs:", inputRefs);
+    console.log("inputValues:", inputValues);
 
-        return children.map((child, i) => {
-            console.log("");
-            console.log("child.props:", child.props);
-
-            const elm = (
-                <TextField
-                    {...child.props}
-                    value={inputValues[i]}
-                    onChange={(e) => updateInputValue(e.target.value)}
-                />
-            );
-
-            console.log("elm.props:", elm.props);
-
-            return elm; 
-        });
-    }, []);
-
-    // useEffect(() => {
-    //     children = Array.isArray(children) ? children : [children];
-
-    //     // children = children.map((child, i) => {
-    //     //     console.log("");
-    //     //     console.log("child.props:", child.props);
-
-    //     //     const elm = (
-    //     //         <TextField
-    //     //             // value={inputValues[i]}
-    //     //             {...child.props}
-    //     //             variant="filled"
-    //     //             value="Apple"
-    //     //         />
-    //     //     );
-
-    //     //     console.log("elm:", elm);
-
-    //     //     return elm;
-    //     // });
-
-    //     // console.log("children:", children);
-    // }, [isOpen, [inputValues]]);
+    // const textFields = useMemo(() => {
+    //     return textFieldData.map((data, i) => (
+    //         <TextField
+    //             type="text"
+    //             {...data}
+    //             id={createRandomID()}
+    //             key={createRandomID()}
+    //             ref={(input) => inputRefs.current[i] = input}
+    //             value={inputValues[i]}
+    //             onChange={(event) => updateInputValue(event.target.value, i)}
+    //         />
+    //     )
+    // )}, []);
 
     useEffect(() => {
         if (isOpen) dispatch({
             type: ACTION_TYPES.RESET_VALUES,
-            length: children.length,
+            length: inputRefs.length,
         });
     }, [isOpen]);
 
-    const updateInputValue = (newValue) => {
+    const updateInputValue = (newValue, index) => {
         console.log("newValue:", newValue);
+        console.log("index:", index);
 
         dispatch({
             type: ACTION_TYPES.UPDATE_VALUE,
             newValue,
-        })
+            index,
+        });
     };
 
     // children[0].props = "123";
@@ -113,9 +90,22 @@ export default function FormModal({ heading, isOpen, closeModalFn, children }) {
                     className="text-field-container"
                     key={createRandomID()}
                 >
-                    {textFields}
+                    {/* {textFields} */}
+                    {textFieldData.map((data, i) => (
+                        <TextField
+                            type="text"
+                            {...data}
+                            id={createRandomID()}
+                            key={createRandomID()}
+                            ref={(input) => inputRefs.current[i] = input}
+                            value={inputValues[i]}
+                            onChange={(event) => updateInputValue(event.target.value, i)}
+                        />
+                    ))}
                 </div>
+
+                <Button></Button>
             </Box>
         </Modal>
-    ) : <div>Modal</div>;
+    ) : <></>;
 }

@@ -7,6 +7,7 @@ import { createRandomID } from '@/services/randomIDs';
 import FormModal from './FormModal';
 import Money from "@/components/Money";
 import TextField from '@mui/material/TextField';
+import { InputAdornment } from '@mui/material';
 
 export default function TxnCard({ type, txns, goal }) {
     const [modalOpen, setModalOpen] = useState(false);
@@ -51,6 +52,24 @@ export default function TxnCard({ type, txns, goal }) {
 
             <FormModal
                 heading={`Add New ${type} Transaction`}
+                submitLabel="Add Transaction"
+                isOpen={modalOpen}
+                closeModalFn={() => setModalOpen(false)}
+                textFieldData={[
+                    {
+                        label: "Transaction Name",
+                        type: "text",
+                    },
+                    {
+                        label: "Amount",
+                        type: "number",
+                        slotProps: { input: { startAdornment: <InputAdornment position="start">$</InputAdornment> } }
+                    }
+                ]}
+            />
+
+            {/* <FormModal
+                heading={`Add New ${type} Transaction`}
                 isOpen={modalOpen}
                 closeModalFn={() => setModalOpen(false)}
             >
@@ -72,7 +91,7 @@ export default function TxnCard({ type, txns, goal }) {
                     // onChange={(event) => handleUpdateEmail(event.target.value)}
                     variant="outlined"
                 />
-            </FormModal>
+            </FormModal> */}
         </div>
     );
 }
