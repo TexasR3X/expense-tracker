@@ -41,7 +41,7 @@ const reducerFn = (inputValues, action) => {
 export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, textFieldData, verifyFn }) {
     const inputRefs = useRef([]);
     const [inputValues, dispatch] = useReducer(reducerFn, Array.from({ length: textFieldData.length }).map(() => ""));
-    const [selectInput, setSelectInput] = useState(null);
+    // const [selectInput, setSelectInput] = useState(null);
 
     console.log("inputRefs:", inputRefs);
     console.log("0 inputValues:", inputValues);
@@ -54,7 +54,7 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
         console.log("newValue:", newValue);
         console.log("index:", index);
 
-        setSelectInput(inputRefs.current[index]);
+        // setSelectInput(index);
         dispatch({
             type: ACTION_TYPES.UPDATE_VALUE,
             newValue,
@@ -77,8 +77,12 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
                     id={textFieldKeys[i]}
                     key={textFieldKeys[i]}
                     ref={(input) => inputRefs.current[i] = input}
-                    onChange={(event) => updateInputValue(event.target.value, i)}
-                    value={inputValues[i]}
+                    onBlur={(event) => updateInputValue(event.target.value, i)}
+                    onKeyDown={(event) => {
+                        console.log("event.key:", event.key);
+                        if (event.key === "Enter") event.target.blur();
+                    }}
+                    defaultValue={inputValues[i]}
                 />
             );
 
@@ -90,8 +94,9 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
 
     // useEffect(() => {
     //     console.log("e selectInput:", selectInput);
-    //     console.log("e selectInput?.children[1]?.children[0]:", selectInput?.children[1]?.children[0]);
-    //     if (!!selectInput) selectInput.children[1].children[0].focus();
+    //     console.log("e inputRefs.current[selectInput]:", inputRefs.current[selectInput]);
+    //     console.log("True?:", selectInput !== null && !!inputRefs.current[selectInput]);
+    //     if (selectInput !== null && !!inputRefs.current[selectInput]) inputRefs.current[selectInput].focus();
     // }, [selectInput]);
 
     const handleSubmit = () => {
@@ -118,12 +123,12 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
                     </IconButton>
                 </div>
 
-                <div
+                <form
                     className="text-field-container"
                     key={createRandomID()}
                 >
                     {renderTextFields()}
-                </div>
+                </form>
 
                 inputValues: {inputValues.join(", ")}
 
