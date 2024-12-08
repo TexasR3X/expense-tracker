@@ -9,8 +9,3 @@ export function createRandomID(length = 30) {
   
     return result;
 }
-
-// I might delete this. I might not use it.
-export function createRandomKey() {
-    return { key: createRandomID() }
-}

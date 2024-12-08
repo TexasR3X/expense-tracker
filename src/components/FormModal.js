@@ -26,26 +26,11 @@ const reducerFn = (inputValues, action) => {
 }
 
 export default function FormModal({ heading, isOpen, closeModalFn, textFieldData }) {
-    // const numOfTextFields = useMemo(() => textFieldData.length);
     const inputRefs = useRef([]);
     const [inputValues, dispatch] = useReducer(reducerFn, Array.from({ length: textFieldData.length }).map(() => ""));
 
     console.log("inputRefs:", inputRefs);
     console.log("inputValues:", inputValues);
-
-    // const textFields = useMemo(() => {
-    //     return textFieldData.map((data, i) => (
-    //         <TextField
-    //             type="text"
-    //             {...data}
-    //             id={createRandomID()}
-    //             key={createRandomID()}
-    //             ref={(input) => inputRefs.current[i] = input}
-    //             value={inputValues[i]}
-    //             onChange={(event) => updateInputValue(event.target.value, i)}
-    //         />
-    //     )
-    // )}, []);
 
     useEffect(() => {
         if (isOpen) dispatch({
@@ -64,10 +49,6 @@ export default function FormModal({ heading, isOpen, closeModalFn, textFieldData
             index,
         });
     };
-
-    // children[0].props = "123";
-
-    // console.log("T:", <TextField {...children[0].props}/>);
 
     return isOpen ? (
         <Modal
@@ -90,7 +71,6 @@ export default function FormModal({ heading, isOpen, closeModalFn, textFieldData
                     className="text-field-container"
                     key={createRandomID()}
                 >
-                    {/* {textFields} */}
                     {textFieldData.map((data, i) => (
                         <TextField
                             type="text"
