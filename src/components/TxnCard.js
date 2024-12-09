@@ -1,20 +1,30 @@
 "use client";
-import { useState } from 'react';
-import { db } from '@/services/database';
-import AddIcon from '@mui/icons-material/Add';
+import { useContext, useState } from 'react';
+import { FirebaseAuthContext } from '@/contexts/FirebaseAuthContext';
+import { Txn } from '@/services/database';
+import MenuIcon from '@mui/icons-material/Menu';
 import TxnRow, { TXN_ROW_INPUT_TYPES } from './TxnRow';
 import createRandomID from '@/services/createRandomID';
 import FormModal from './FormModal';
-import Money from "@/components/Money";
-import TextField from '@mui/material/TextField';
-import { InputAdornment } from '@mui/material';
 import { sanitizeNum, sanitizeStr } from '@/services/sanitizeData';
+import { Timestamp } from 'firebase/firestore';
+import { Button, Popover, Typography } from '@mui/material';
 
 export default function TxnCard({ type, txns, goal }) {
-    const [modalOpen, setModalOpen] = useState(false);
+    const user = useContext(FirebaseAuthContext);
+
+    const [txnModalOpen, setTxnModalOpen] = useState(false);
+    const [popOverAnchor, setPopOverAnchor] = useState(null);
     
 
-    const handleAddIconClick = () => setModalOpen(true);
+    const handleMenuIconClick = (event) => {
+        setPopOverAnchor(event.currentTarget);
+    }
+
+    const handlePopoverButtonClick = () => {
+        setTxnModalOpen(true);
+        setPopOverAnchor(null);
+    }
 
     const total = txns.total;
     const difference = goal?.amount - total;
@@ -23,7 +33,29 @@ export default function TxnCard({ type, txns, goal }) {
         <div className="txn-card">
             <h4>
                 <div>{type}</div>
-                <AddIcon onClick={handleAddIconClick}/>
+                <MenuIcon
+                    onClick={handleMenuIconClick}
+                    aria-describedby="popover"
+                />
+                <Popover
+                    id="popover"
+                    open={!!popOverAnchor}
+                    anchorEl={popOverAnchor}
+                    onClose={() => setPopOverAnchor(null)}
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                >
+                    <Typography sx={{ p: 2 }}>
+                        <Button
+                            onClick={handlePopoverButtonClick}
+                            variant="text"
+                        >
+                            Add New Transaction
+                        </Button>
+                    </Typography>
+                </Popover>
             </h4>
 
             <div>
@@ -55,8 +87,8 @@ export default function TxnCard({ type, txns, goal }) {
             <FormModal
                 heading={`Add New ${type} Transaction`}
                 submitLabel="Add Transaction"
-                isOpen={modalOpen}
-                closeModalFn={() => setModalOpen(false)}
+                isOpen={txnModalOpen}
+                closeModalFn={() => setTxnModalOpen(false)}
                 textFieldData={[
                     {
                         label: "Transaction Name",
@@ -70,46 +102,30 @@ export default function TxnCard({ type, txns, goal }) {
                 submitFn={(inputValues) => {
                     console.log("inputValues:", inputValues);
 
-                    const sanitizedValue0 = sanitizeStr(inputValues[0]);
-                    const sanitizedValue1 = sanitizeNum(inputValues[1]);
-                    console.log("sanitizedValue0:", sanitizedValue0);
-                    console.log("sanitizedValue1:", sanitizedValue1);
+                    const sanitizedName = sanitizeStr(inputValues[0]);
+                    const sanitizedAmount = sanitizeNum(inputValues[1]);
+                    console.log("sanitizedName:", sanitizedName);
+                    console.log("sanitizedAmount:", sanitizedAmount);
 
-                    if (sanitizedValue0.valid && sanitizedValue1.valid) {
+                    if (sanitizedName.valid && sanitizedAmount.valid) {
                         console.log("Valid!");
+
+                        const newTxn = new Txn({
+                            name: sanitizedName.result,
+                            type,
+                            amount: sanitizedAmount.result,
+                            date: Timestamp.now(),
+                        });
+
+                        newTxn.pushToDB(user);
                     }
 
                     return [
-                        sanitizedValue0.valid,
-                        sanitizedValue1.valid,
+                        sanitizedName.valid,
+                        sanitizedAmount.valid,
                     ];
                 }}
             />
-
-            {/* <FormModal
-                heading={`Add New ${type} Transaction`}
-                isOpen={modalOpen}
-                closeModalFn={() => setModalOpen(false)}
-            >
-                <TextField
-                    label="Transaction Name"
-                    id={createRandomID()}
-                    key={createRandomID()}
-                    type="text"
-                    // value={userData.email}
-                    // onChange={(event) => handleUpdateEmail(event.target.value)}
-                    variant="outlined"
-                />
-                <TextField
-                    label="Amount"
-                    id={createRandomID()}
-                    key={createRandomID()}
-                    type="text"
-                    // value={userData.email}
-                    // onChange={(event) => handleUpdateEmail(event.target.value)}
-                    variant="outlined"
-                />
-            </FormModal> */}
         </div>
     );
 }
