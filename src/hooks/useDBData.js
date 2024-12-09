@@ -1,23 +1,30 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db, TxnGroup } from "@/services/database";
+import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 
-export default function useDBData(user, collectionID, classType) {
+export default function useDBData(collectionID, classType) {
+    const user = useContext(FirebaseAuthContext);
+
     const [data, setData] = useState(null);
 
     let dataArr = [];
 
     useEffect(() => {
-        const q = query(collection(db, collectionID), where("uid", "==", user.uid));
-        const unsub = onSnapshot(q, (querySnapshot) => {
-            dataArr = [];
-            querySnapshot.forEach((doc) => dataArr.push(doc.data()));
-            setData(new classType(dataArr));
-        });
+        if (!!user) {
+            const q = query(collection(db, collectionID), where("uid", "==", user.uid));
+            const unsub = onSnapshot(q, (querySnapshot) => {
+                dataArr = [];
+                querySnapshot.forEach((doc) => dataArr.push(doc.data()));
+                setData(new classType(dataArr));
+            });
+    
+            return unsub;
+        }
+    }, [user]);
 
-        return unsub;
-    }, []);
+    if (!user) return null;
 
     return data;
 }

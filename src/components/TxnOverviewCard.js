@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import { TXN_TYPES } from '@/services/database';
 
 
-export default function TxnOverviewCard({ txns, goals }) {
+export default function TxnOverviewCard({ txnCollection, goals }) {
     return (
         <div className="txn-overview-card">
             <h4>Expense Overview</h4>
@@ -25,11 +25,23 @@ export default function TxnOverviewCard({ txns, goals }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {TXN_TYPES.map((txn) => (
+                        {txnCollection.map((txnGroup) => {
+                            console.log("txnGroup:", txnGroup);
+
+                            return (
+                                <TableRow>
+                                    <TableCell align="center">{txnGroup.type}</TableCell>
+                                    <TableCell align="center">{}</TableCell>
+                                    <TableCell align="center"></TableCell>
+                                </TableRow>
+                            );
+                        })}
+
+                        {/* {TXN_TYPES.map((txn) => (
                             <TableRow>
                                 <TableCell></TableCell>
                             </TableRow>
-                        ))}
+                        ))} */}
 
                         {/* <TableRow>
                             <TableCell align="center">Food</TableCell>

@@ -7,12 +7,15 @@ import TxnCard from "@/components/TxnCard";
 import createRandomID from "@/services/createRandomID";
 import useDBData from "@/hooks/useDBData";
 import OverViewCard from "@/components/TxnOverviewCard";
+import { DBCollectionsContext } from "@/contexts/DBCollectionsContext";
 
 export default function Home() {
     const user = useContext(FirebaseAuthContext);
 
-    const txnCollection = useDBData(user, "transactions", TxnCollection);
-    const goalGroup = useDBData(user, "goals", GoalGroup);
+    const { txnCollection, goalGroup } = useContext(DBCollectionsContext);
+
+    // const txnCollection = useDBData(user, "transactions", TxnCollection);
+    // const goalGroup = useDBData(user, "goals", GoalGroup);
 
     const testFn = async () => {
         try {
@@ -88,7 +91,15 @@ export default function Home() {
         return txnCardsArr;
     }
     */
-    const renderTxnCards = () => {}
+
+    console.log("!!txnCollection:", !!txnCollection);
+    console.log("!!goalGroup:", !!goalGroup);
+
+    const renderIfDataPulled = (jsx) => {
+        
+
+        return !!txnCollection && !!goalGroup ? jsx : null;
+    }
 
     console.log("txnCollection:", txnCollection);
     console.log("goalGroup:", goalGroup);
@@ -104,27 +115,26 @@ export default function Home() {
                 Test
             </Button> */}
 
-            {/* <OverViewCard
-                txns={txnCollection}
-                goals={goalGroup}
-            /> */}
-
-            {/* {!!txnCollection ? renderTxnCards() : null} */}
-
-            {!! txnCollection ? txnCollection.map((txnGroup) => {
-                const type = txnGroup.type;
-
-                return !!txnGroup.length ? (
-                    <TxnCard
-                        type={type}
-                        key={`TxnCard key: ${type}`}
-                        txns={txnGroup}
-                        goal={goalGroup.getGoal(type)}
+            {renderIfDataPulled(
+                <>
+                    <OverViewCard
+                        txnCollection={txnCollection}
+                        goals={goalGroup}
                     />
-                ): null;
-            }) : null}
-
-            
+                    {txnCollection.map((txnGroup) => {
+                        const type = txnGroup.type;
+        
+                        return !!txnGroup.length ? (
+                            <TxnCard
+                                type={type}
+                                key={`TxnCard key: ${type}`}
+                                txns={txnGroup}
+                                goal={goalGroup.getGoal(type)}
+                            />
+                        ) : null;
+                    })}
+                </>
+            )}
         </div>
     );
 }
