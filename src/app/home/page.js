@@ -12,7 +12,10 @@ import { DBCollectionsContext } from "@/contexts/DBCollectionsContext";
 export default function Home() {
     const user = useContext(FirebaseAuthContext);
 
-    const { txnCollection, goalGroup } = useContext(DBCollectionsContext);
+    const txnCollection = useContext(DBCollectionsContext);
+
+    console.log("H user:", user);
+    console.log("H txnCollection:", txnCollection);
 
     // const txnCollection = useDBData(user, "transactions", TxnCollection);
     // const goalGroup = useDBData(user, "goals", GoalGroup);
@@ -92,17 +95,11 @@ export default function Home() {
     }
     */
 
-    console.log("!!txnCollection:", !!txnCollection);
-    console.log("!!goalGroup:", !!goalGroup);
-
-    const renderIfDataPulled = (jsx) => {
+    // const renderIfDataPulled = (jsx) => {
         
 
-        return !!txnCollection && !!goalGroup ? jsx : null;
-    }
-
-    console.log("txnCollection:", txnCollection);
-    console.log("goalGroup:", goalGroup);
+    //     return !!txnCollection && !!goalGroup ? jsx : null;
+    // }
 
     return (
         <div>
@@ -115,26 +112,22 @@ export default function Home() {
                 Test
             </Button> */}
 
-            {renderIfDataPulled(
-                <>
-                    <OverViewCard
-                        txnCollection={txnCollection}
-                        goals={goalGroup}
+            <OverViewCard
+                txnCollection={txnCollection}
+            />
+
+            {txnCollection.map((txnGroup) => {
+                const type = txnGroup.type;
+
+                return !!txnGroup.length ? (
+                    <TxnCard
+                        type={type}
+                        key={`TxnCard key: ${type}`}
+                        txns={txnGroup}
+                        // goal={txnGroup.goal}
                     />
-                    {txnCollection.map((txnGroup) => {
-                        const type = txnGroup.type;
-        
-                        return !!txnGroup.length ? (
-                            <TxnCard
-                                type={type}
-                                key={`TxnCard key: ${type}`}
-                                txns={txnGroup}
-                                goal={goalGroup.getGoal(type)}
-                            />
-                        ) : null;
-                    })}
-                </>
-            )}
+                ) : null;
+            })}
         </div>
     );
 }

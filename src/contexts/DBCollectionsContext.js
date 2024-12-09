@@ -10,8 +10,26 @@ import useDBData from "@/hooks/useDBData";
 export const DBCollectionsContext = createContext(null);
 
 export default function DBCollectionsProvider({ children }) {
-    const txnCollection = useDBData("transactions", TxnCollection);
     const goalGroup = useDBData("goals", GoalGroup);
+    console.log("DB goalGroup:", goalGroup);
 
-    return <DBCollectionsContext.Provider value={{ txnCollection, goalGroup }}>{children}</DBCollectionsContext.Provider>;
+    const txnCollection = useDBData("transactions", TxnCollection, goalGroup);
+
+    console.log("DB txnCollection:", txnCollection);
+
+    // useEffect(() => {
+    //     if (!!txnCollection && !!goalGroup) {
+    //         txnCollection.addGoalsToTxnGroups(goalGroup);
+
+    //         console.log("txnCollection:", txnCollection);
+
+    //         // txnCollection.forEach((txnGroup, i) => {
+    //         //     console.log("f txnGroup.type:", txnGroup.type);
+    //         //     console.log("f txnGroup.goal:", txnGroup.goal);
+    //         //     console.log("i:", i);
+    //         // });
+    //     }
+    // }, [txnCollection, goalGroup]);
+
+    return <DBCollectionsContext.Provider value={txnCollection}>{children}</DBCollectionsContext.Provider>;
 }

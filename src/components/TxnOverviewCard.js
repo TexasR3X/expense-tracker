@@ -1,12 +1,13 @@
 "use client";
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { TXN_TYPES } from '@/services/database';
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import { TXN_TYPES } from "@/services/database";
+import Money from "./Money";
 
 
 export default function TxnOverviewCard({ txnCollection, goals }) {
@@ -26,13 +27,17 @@ export default function TxnOverviewCard({ txnCollection, goals }) {
                     </TableHead>
                     <TableBody>
                         {txnCollection.map((txnGroup) => {
-                            console.log("txnGroup:", txnGroup);
-
                             return (
-                                <TableRow>
-                                    <TableCell align="center">{txnGroup.type}</TableCell>
-                                    <TableCell align="center">{}</TableCell>
-                                    <TableCell align="center"></TableCell>
+                                <TableRow key={`TableRow key: ${txnGroup.type}`}>
+                                    <TableCell align="center">
+                                        {txnGroup.type}
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Money amount={txnGroup.goal}/>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <Money amount={txnGroup.total}/>
+                                    </TableCell>
                                 </TableRow>
                             );
                         })}

@@ -33,7 +33,6 @@ export default function TxnRow({ data, inputType }) {
             <Money
                 amount={data?.amount}
                 display="block"
-                key={createRandomID()}
             />
         </div>
     );

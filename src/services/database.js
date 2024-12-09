@@ -29,9 +29,9 @@ export const TXN_TYPES = {
     PERSONAL: "Personal",
     EDUCATION: "Education",
     GIFTS_AND_DONATIONS: "Gifts and Donations",
-    CHILDREN: "Children",
+    CHILD_CARE: "Child Care",
     MISCELLANEOUS: "Miscellaneous",
-    INCOME: "Income",
+    // INCOME: "Income",
     forEach(callback) {
         let i = 0;
         for (const type of Object.values(this)) {
@@ -53,7 +53,7 @@ export const TXN_TYPES = {
 }
 
 export class TxnCollection {
-    constructor(txnArr) {
+    constructor(txnArr, goalGroup) {
         const allTxns = new TxnGroup(txnArr);
         
         this.totals = [];
@@ -61,6 +61,8 @@ export class TxnCollection {
             const filteredTxns = allTxns.filterByType(type);
 
             filteredTxns.type = type;
+            console.log("cl goalGroup:", goalGroup);
+            filteredTxns.goal = goalGroup?.getGoal(type)?.amount ?? "none";
 
             this.totals.push(filteredTxns.total);
 
@@ -70,6 +72,17 @@ export class TxnCollection {
 
     getTxnGroup(type) {
         return this.txnGroups.find((txnGroup) => txnGroup.type === type) ?? null;
+    }
+    addGoalsToTxnGroups(goalGroup) {
+        this.forEach((txnGroup) => {
+            txnGroup.goal = goalGroup.getGoal(txnGroup.type)?.amount;
+        });
+    }
+    forEach(callback) {
+        let i = 0;
+        for (const txnGroup of this.txnGroups) {
+            callback(txnGroup, i++, this);
+        }
     }
     map(callback) {
         return this.txnGroups.map(callback);
@@ -82,6 +95,7 @@ export class TxnGroup {
     constructor(txnArr) {
         this.txns = txnArr.map((txn) => new Txn(txn));
         this.type = null;
+        this.goal = null;
         this.length = this.txns.length;
         this.total = fixNum(this.txns.reduce((accumulator, currentTxn) => accumulator + currentTxn.amount, 0));
     }

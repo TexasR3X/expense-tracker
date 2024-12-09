@@ -10,10 +10,11 @@ import { sanitizeNum, sanitizeStr } from '@/services/sanitizeData';
 import { Timestamp } from 'firebase/firestore';
 import { Button, Popover, Typography } from '@mui/material';
 
-export default function TxnCard({ txns, goal }) {
+export default function TxnCard({ txns }) {
     const user = useContext(FirebaseAuthContext);
 
-    const type = useMemo(() => txns.type, [txns]);
+    // const type = useMemo(() => txns.type, [txns]);
+    // const goal = useMemo(() => txns.goal, [txns]);
     const [txnModalOpen, setTxnModalOpen] = useState(false);
     const [popOverAnchor, setPopOverAnchor] = useState(null);
     
@@ -27,13 +28,13 @@ export default function TxnCard({ txns, goal }) {
         setPopOverAnchor(null);
     }
 
-    const total = txns.total;
-    const difference = goal?.amount - total;
+    // const total = txns.total;
+    // const difference = goal - total;
 
     return (
         <div className="txn-card">
             <h4>
-                <div>{type}</div>
+                <div>{txns.type}</div>
 
                 <MenuIcon
                     onClick={handleMenuIconClick}
@@ -69,17 +70,17 @@ export default function TxnCard({ txns, goal }) {
                     />
                 ))}
                 <TxnRow
-                    data={goal}
+                    data={{ amount: txns.goal }}
                     inputType={TXN_ROW_INPUT_TYPES.GOAL}
                     key={createRandomID()}
                 />
                 <TxnRow
-                    data={{ amount: total }}
+                    data={{ amount: txns.total }}
                     inputType={TXN_ROW_INPUT_TYPES.TOTAL}
                     key={createRandomID()}
                 />
                 <TxnRow
-                    data={{ amount: difference }}
+                    data={{ amount: txns.goal - txns.total }}
                     inputType={TXN_ROW_INPUT_TYPES.DIFFERENCE}
                     key={createRandomID()}
                 />
@@ -87,7 +88,7 @@ export default function TxnCard({ txns, goal }) {
 
 
             <FormModal
-                heading={`Add New ${type} Transaction`}
+                heading={`Add New ${txns.type} Transaction`}
                 submitLabel="Add Transaction"
                 isOpen={txnModalOpen}
                 closeModalFn={() => setTxnModalOpen(false)}
@@ -114,7 +115,7 @@ export default function TxnCard({ txns, goal }) {
 
                         const newTxn = new Txn({
                             name: sanitizedName.result,
-                            type,
+                            type: txns.type,
                             amount: sanitizedAmount.result,
                             date: Timestamp.now(),
                         });

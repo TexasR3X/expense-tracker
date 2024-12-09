@@ -4,7 +4,7 @@ import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { db, TxnGroup } from "@/services/database";
 import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 
-export default function useDBData(collectionID, classType) {
+export default function useDBData(collectionID, classType, otherData = "NONE") {
     const user = useContext(FirebaseAuthContext);
 
     const [data, setData] = useState(null);
@@ -17,14 +17,13 @@ export default function useDBData(collectionID, classType) {
             const unsub = onSnapshot(q, (querySnapshot) => {
                 dataArr = [];
                 querySnapshot.forEach((doc) => dataArr.push(doc.data()));
-                setData(new classType(dataArr));
+                setData(new classType(dataArr, otherData));
             });
     
             return unsub;
         }
-    }, [user]);
+    }, [user, otherData]);
 
     if (!user) return null;
-
-    return data;
+    else return data;
 }
