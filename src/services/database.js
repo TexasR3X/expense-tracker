@@ -38,20 +38,65 @@ export const TXN_TYPES = {
             if (typeof type === "function") break;
             callback(type, i++);
         }
+    },
+    map(callback) {
+        const returnArr = [];
+
+        let i = 0;
+        for (const type of Object.values(this)) {
+            if (typeof type === "function") break;
+            returnArr.push(callback(type, i++));
+        }
+
+        return returnArr;
     }
 }
+
+export class TxnCollection {
+    constructor(txnArr) {
+        const allTxns = new TxnGroup(txnArr);
+        
+        this.totals = [];
+        this.txnGroups = TXN_TYPES.map((type) => {
+            const filteredTxns = allTxns.filterByType(type);
+
+            filteredTxns.type = type;
+
+            this.totals.push(filteredTxns.total);
+
+            return filteredTxns;
+        });
+    }
+
+    getTxnGroup(type) {
+        return this.txnGroups.find((txnGroup) => txnGroup.type === type) ?? null;
+    }
+    map(callback) {
+        return this.txnGroups.map(callback);
+    }
+}
+
+const fixNum = (num) => Number(num.toFixed(5));
 
 export class TxnGroup {
     constructor(txnArr) {
         this.txns = txnArr.map((txn) => new Txn(txn));
-        // this.txns = txnArr;
+        this.type = null;
         this.length = this.txns.length;
-        this.total = this.txns.reduce((accumulator, currentTxn) => accumulator + currentTxn.amount, 0);
+        this.total = fixNum(this.txns.reduce((accumulator, currentTxn) => accumulator + currentTxn.amount, 0));
     }
 
-    filter(callback) {
-        return new TxnGroup(this.txns.filter(callback));
+    // filter(callback) {
+    //     return new TxnGroup(this.txns.filter(callback));
+    // }
+    filterByType(type) {
+        return new TxnGroup(this.txns.filter((txn) => txn.type === type));
     }
+    // sortByTypes() {
+    //     TXN_TYPES.map((type) => {
+
+    //     });
+    // }
     map(callback) {
         return this.txns.map(callback);
     }

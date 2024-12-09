@@ -34,6 +34,19 @@ a {
     text-decoration: none;
 }
 
+@mixin heading($padding: 0.5rem, $text-align: center) {
+    background-color: #4a86e8ff;
+    color: #fff;
+    text-align: $text-align;
+    padding: $padding;
+}
+
+.txn-overview-card {
+    h4 {
+        @include heading($padding: 1rem);
+    }
+}
+
 .modal-box {
     position: fixed;
     left: 3rem;
@@ -60,8 +73,7 @@ nav {
     gap: 0.5rem;
     padding: 0.5rem;
 
-    background-color: #4a86e8ff;
-    color: #fff;
+    @include heading($text-align: left);
 
     h2 {
         flex-grow: 1;
@@ -75,8 +87,7 @@ nav {
     h4 {
         display: flex;
         align-items: center;
-        background-color: #4a86e8ff;
-        color: #fff;
+        @include heading();
 
         div {
             flex-grow: 1;

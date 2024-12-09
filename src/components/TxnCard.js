@@ -1,5 +1,5 @@
 "use client";
-import { useContext, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { FirebaseAuthContext } from '@/contexts/FirebaseAuthContext';
 import { Txn } from '@/services/database';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -10,9 +10,10 @@ import { sanitizeNum, sanitizeStr } from '@/services/sanitizeData';
 import { Timestamp } from 'firebase/firestore';
 import { Button, Popover, Typography } from '@mui/material';
 
-export default function TxnCard({ type, txns, goal }) {
+export default function TxnCard({ txns, goal }) {
     const user = useContext(FirebaseAuthContext);
 
+    const type = useMemo(() => txns.type, [txns]);
     const [txnModalOpen, setTxnModalOpen] = useState(false);
     const [popOverAnchor, setPopOverAnchor] = useState(null);
     
@@ -33,6 +34,7 @@ export default function TxnCard({ type, txns, goal }) {
         <div className="txn-card">
             <h4>
                 <div>{type}</div>
+
                 <MenuIcon
                     onClick={handleMenuIconClick}
                     aria-describedby="popover"
