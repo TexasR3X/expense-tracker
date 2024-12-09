@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
-import { useEffect, useMemo, useReducer, useRef } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import createRandomID from "@/services/createRandomID";
 
 const ACTION_TYPES = {
@@ -31,20 +31,28 @@ const reducerFn = (inputValues, action) => {
     }
 }
 
-export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, textFieldData, verifyFn }) {
+export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, textFieldData, submitFn }) {
+    // const textFieldAmount = useMemo(() => textFieldData.length);
+    const createDefaultArr = useCallback((value) => Array.from({ length: textFieldData.length }).map(() => value), []);
+
     const inputRefs = useRef([]);
-    const [inputValues, dispatch] = useReducer(reducerFn, Array.from({ length: textFieldData.length }).map(() => ""));
+    const [inputValues, dispatch] = useReducer(reducerFn, createDefaultArr(""));
+    const [validBools, setValidBools] = useState(createDefaultArr(true));
 
 
     useEffect(() => {
         dispatch({ type: ACTION_TYPES.RESET_VALUES });
     }, [isOpen]);
 
-    const updateInputValue = (newValue, index) => dispatch({
-        type: ACTION_TYPES.UPDATE_VALUE,
-        newValue,
-        index,
-    });
+    const updateInputValue = (newValue, index) => {
+        
+        setValidBools(createDefaultArr(true));
+        dispatch({
+            type: ACTION_TYPES.UPDATE_VALUE,
+            newValue,
+            index,
+        });
+    }
 
     const textFieldKeys = useMemo(() => {
         return Array.from({ length: inputValues.length }).map(() => createRandomID());
@@ -75,7 +83,14 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
     // }
 
     const handleSubmit = () => {
-        verifyFn(inputValues);
+        const returnedValidBools = submitFn(inputValues);
+
+        const allInputsValid = returnedValidBools.reduce((accumulator, currentValue) => {
+            return accumulator && currentValue;
+        }, true);
+
+        if (allInputsValid) closeModalFn();
+        else setValidBools(returnedValidBools);
     }
 
     return isOpen ? (
@@ -86,7 +101,7 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
         >
             <Box className="modal-box">
                 <div key={createRandomID()}>
-                    <h3 onClick={() => console.log("test inputValues:", inputValues)}>{heading}</h3>
+                    <h3>{heading}</h3>
                     
                     <IconButton
                         aria-label="close"
@@ -110,6 +125,7 @@ export default function FormModal({ heading, submitLabel, isOpen, closeModalFn, 
                             onBlur={(event) => updateInputValue(event.target.value, i)}
                             onKeyDown={onEnterKey}
                             defaultValue={inputValues[i]}
+                            error={!validBools[i]}
                         />
                     ))}
                 </form>

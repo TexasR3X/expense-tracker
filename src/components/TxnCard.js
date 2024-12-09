@@ -8,6 +8,7 @@ import FormModal from './FormModal';
 import Money from "@/components/Money";
 import TextField from '@mui/material/TextField';
 import { InputAdornment } from '@mui/material';
+import { sanitizeNum, sanitizeStr } from '@/services/sanitizeData';
 
 export default function TxnCard({ type, txns, goal }) {
     const [modalOpen, setModalOpen] = useState(false);
@@ -63,11 +64,25 @@ export default function TxnCard({ type, txns, goal }) {
                     {
                         label: "Amount",
                         // type: "number",
-                        slotProps: { input: { startAdornment: <InputAdornment position="start">$</InputAdornment> } }
+                        // slotProps: { input: { startAdornment: <InputAdornment position="start">$</InputAdornment> } },
                     }
                 ]}
-                verifyFn={(inputValues) => {
-                    console.log("v inputValues:", inputValues);
+                submitFn={(inputValues) => {
+                    console.log("inputValues:", inputValues);
+
+                    const sanitizedValue0 = sanitizeStr(inputValues[0]);
+                    const sanitizedValue1 = sanitizeNum(inputValues[1]);
+                    console.log("sanitizedValue0:", sanitizedValue0);
+                    console.log("sanitizedValue1:", sanitizedValue1);
+
+                    if (sanitizedValue0.valid && sanitizedValue1.valid) {
+                        console.log("Valid!");
+                    }
+
+                    return [
+                        sanitizedValue0.valid,
+                        sanitizedValue1.valid,
+                    ];
                 }}
             />
 
