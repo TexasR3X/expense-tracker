@@ -8,7 +8,7 @@ import createRandomID from '@/services/createRandomID';
 import FormModal from './FormModal';
 import { sanitizeDate, sanitizeNum, sanitizeStr } from '@/services/sanitizeData';
 import { Timestamp } from 'firebase/firestore';
-import { Button, Popover, Typography } from '@mui/material';
+import { Button, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
 export default function TxnCard({ txns }) {
     const user = useContext(FirebaseAuthContext);
@@ -61,7 +61,29 @@ export default function TxnCard({ txns }) {
                 </Popover>
             </h4>
 
-            <div>
+            <TableContainer>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell align="center">Transaction</TableCell>
+                            <TableCell align="center">Amount</TableCell>
+                            <TableCell align="center">Date</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {txns.map((txn) => (
+                            <TableRow key={`txn key: ${txn.docID}`}>
+                                <TableCell align="center">{txn.name}</TableCell>
+                                <TableCell align="center">{txn.getMoneyStr()}</TableCell>
+                                <TableCell align="center">{txn.getDateStr()}</TableCell>
+                            </TableRow>
+                        ))}
+                        
+                    </TableBody>
+                </Table>
+            </TableContainer>
+
+            {/* <div>
                 {txns.map((txn) => (
                     <TxnRow
                         data={txn}
@@ -84,7 +106,7 @@ export default function TxnCard({ txns }) {
                     inputType={TXN_ROW_INPUT_TYPES.DIFFERENCE}
                     key={createRandomID()}
                 />
-            </div>
+            </div> */}
 
 
             <FormModal

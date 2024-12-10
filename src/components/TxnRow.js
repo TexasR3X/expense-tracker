@@ -36,15 +36,4 @@ export default function TxnRow({ data, inputType }) {
             />
         </div>
     );
-
-    // <div className="txn-row">
-    //     <div key={createRandomID()}>
-    //         {data.type === TXN_TYPES.BALANCE ? <strong>{data.name}</strong> : data.name}
-    //     </div>
-    //     <Money
-    //         amount={data.amount}
-    //         display="block"
-    //         key={createRandomID()}
-    //     />
-    // </div>
 }
