@@ -1,5 +1,4 @@
 "use client";
-import { Goal, Txn, TXN_TYPES } from "@/services/database";
 import Money from "./Money";
 import createRandomID from "@/services/createRandomID";
 

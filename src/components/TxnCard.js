@@ -107,7 +107,7 @@ export default function TxnCard({ txns }) {
                     />
                 ))}
                 <TxnRow
-                    data={{ amount: txns.goal }}
+                    data={{ amount: txns.goal.amount }}
                     inputType={TXN_ROW_INPUT_TYPES.GOAL}
                     key={createRandomID()}
                 />
@@ -117,7 +117,7 @@ export default function TxnCard({ txns }) {
                     key={createRandomID()}
                 />
                 <TxnRow
-                    data={{ amount: txns.goal - txns.total }}
+                    data={{ amount: txns.goal.amount - txns.total }}
                     inputType={TXN_ROW_INPUT_TYPES.DIFFERENCE}
                     key={createRandomID()}
                 />

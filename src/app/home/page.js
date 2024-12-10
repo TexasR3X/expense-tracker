@@ -124,6 +124,8 @@ export default function Home() {
                 txnCollection={txnCollection}
             />
 
+            {/* <h3>Transaction</h3> */}
+
             {txnCollection.map((txnGroup) => {
                 const type = txnGroup.type;
 
