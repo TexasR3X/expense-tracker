@@ -9,6 +9,7 @@ import FormModal from './FormModal';
 import { sanitizeDate, sanitizeNum, sanitizeStr } from '@/services/sanitizeData';
 import { Timestamp } from 'firebase/firestore';
 import { Button, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { printDate, printMoney } from '@/util/printData';
 
 export default function TxnCard({ txns }) {
     const user = useContext(FirebaseAuthContext);
@@ -74,11 +75,25 @@ export default function TxnCard({ txns }) {
                         {txns.map((txn) => (
                             <TableRow key={`txn key: ${txn.docID}`}>
                                 <TableCell align="center">{txn.name}</TableCell>
-                                <TableCell align="center">{txn.getMoneyStr()}</TableCell>
-                                <TableCell align="center">{txn.getDateStr()}</TableCell>
+                                <TableCell align="center">{printMoney(txn.amount)}</TableCell>
+                                <TableCell align="center">{printDate(txn.date)}</TableCell>
                             </TableRow>
                         ))}
-                        
+                        <TableRow key={`txn key: goal`}>
+                            <TableCell align="center">Goal</TableCell>
+                            <TableCell align="center">{printMoney(txns.goal.amount)}</TableCell>
+                            <TableCell align="center">{printDate(txns.goal.date)}</TableCell>
+                        </TableRow>
+                        <TableRow key={`txn key: total`}>
+                            <TableCell align="center">Total</TableCell>
+                            <TableCell align="center">{printMoney(txns.total)}</TableCell>
+                            <TableCell align="center">{printDate(null)}</TableCell>
+                        </TableRow>
+                        <TableRow key={`txn key: difference`}>
+                            <TableCell align="center">Difference</TableCell>
+                            <TableCell align="center">{printMoney(txns.goal.amount - txns.total)}</TableCell>
+                            <TableCell align="center">{printDate(null)}</TableCell>
+                        </TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>

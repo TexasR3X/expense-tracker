@@ -136,31 +136,6 @@ export class Txn {
             docID: this.docID,
         });
     }
-    getDateStr() {
-        if (!this.date) return "none";
-
-        const dateObj = this.date.toDate();
-
-        const month = dateObj.getMonth() + 1;
-        const day = dateObj.getDate();
-        const year = dateObj.getFullYear();
-
-        const formattedDateStr = `${month}/${day}/${year}`;
-
-        return formattedDateStr;
-    }
-    getMoneyStr() {
-        if (this.amount === null) return "none";
-
-        const formatter = new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-        });
-    
-        let formattedAmount = formatter.format(this.amount);
-    
-        return formattedAmount;
-    }
 }
 
 
