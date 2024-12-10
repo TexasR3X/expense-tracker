@@ -4,14 +4,12 @@ import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import Money from "./Money";
 import FormModal from "./FormModal";
-import { sanitizeNum } from "@/services/sanitizeData";
+import { sanitizeDate, sanitizeNum } from "@/services/sanitizeData";
 import { Goal } from "@/services/database";
 import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 
 export default function AddGoalButton({ goal }) {
     const [openModal, setOpenModal] = useState(false);
-
-    console.log("A goal:", goal);
 
     const { amount, type } = goal;
 
@@ -60,7 +58,7 @@ function AddGoalModal({ isOpen, closeModalFn, type, newOrChange = "NEW" }) {
             ]}
             submitFn={(inputValues) => {
                 const sanitizedGoal = sanitizeNum(inputValues[0]);
-                const sanitizedDate = sanitizeNum(inputValues[1]);
+                const sanitizedDate = sanitizeDate(inputValues[1]);
 
                 if (sanitizedGoal.valid && sanitizedDate.valid) {
                     if (newOrChange === "NEW") {

@@ -102,9 +102,9 @@ export default function Home() {
 
     return (
         <div>
-            <p>Welcome to the page where you track all of your expenses!</p>
+            <br/>
 
-            <TextField
+            {/* <TextField
                 id="myId"
                 type="date"
                 label="My Date Picker"
@@ -118,11 +118,13 @@ export default function Home() {
                 onClick={testFn}
             >
                 Test
-            </Button>
+            </Button> */}
 
             <OverViewCard
                 txnCollection={txnCollection}
             />
+
+            {/* <h3>Transaction</h3> */}
 
             {txnCollection.map((txnGroup) => {
                 const type = txnGroup.type;

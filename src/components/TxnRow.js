@@ -1,5 +1,4 @@
 "use client";
-import { Goal, Txn, TXN_TYPES } from "@/services/database";
 import Money from "./Money";
 import createRandomID from "@/services/createRandomID";
 
@@ -36,15 +35,4 @@ export default function TxnRow({ data, inputType }) {
             />
         </div>
     );
-
-    // <div className="txn-row">
-    //     <div key={createRandomID()}>
-    //         {data.type === TXN_TYPES.BALANCE ? <strong>{data.name}</strong> : data.name}
-    //     </div>
-    //     <Money
-    //         amount={data.amount}
-    //         display="block"
-    //         key={createRandomID()}
-    //     />
-    // </div>
 }
