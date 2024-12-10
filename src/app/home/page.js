@@ -129,7 +129,11 @@ export default function Home() {
             {txnCollection.map((txnGroup) => {
                 const type = txnGroup.type;
 
-                return !!txnGroup.length ? (
+                console.log("W txnGroup:", txnGroup);
+
+                // !!txnGroup.length
+
+                return txnGroup.goal.amount !== null ? (
                     <TxnCard
                         type={type}
                         key={`TxnCard key: ${type}`}

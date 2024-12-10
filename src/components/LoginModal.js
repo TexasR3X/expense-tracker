@@ -227,6 +227,8 @@ export default function LoginModal({ type, setModalOpen }) {
                     ) : null
                 }
 
+                <br/>
+
                 <TextField
                     label="Email"
                     id="email"
@@ -236,6 +238,8 @@ export default function LoginModal({ type, setModalOpen }) {
                     variant="outlined"
                 />
 
+                <br/>
+
                 <TextField
                     label="Password"
                     id="password"
@@ -244,6 +248,8 @@ export default function LoginModal({ type, setModalOpen }) {
                     onChange={(event) => handleUpdatePassword(event.target.value)}
                     variant="outlined"
                 />
+
+                <br/>
 
                 {
                     type === LOGIN_MODAL_TYPES.SIGN_UP ? (

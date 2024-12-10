@@ -65,7 +65,7 @@ export default function TxnCard({ txns }) {
             <TableContainer>
                 <Table>
                     <TableHead>
-                        <TableRow>
+                        <TableRow className="bolded-row">
                             <TableCell align="center">Transaction</TableCell>
                             <TableCell align="center">Amount</TableCell>
                             <TableCell align="center">Date</TableCell>
@@ -79,17 +79,26 @@ export default function TxnCard({ txns }) {
                                 <TableCell align="center">{printDate(txn.date)}</TableCell>
                             </TableRow>
                         ))}
-                        <TableRow key={`txn key: goal`}>
+                        <TableRow
+                            className="bolded-row"
+                            key={`txn key: goal`}
+                        >
                             <TableCell align="center">Goal</TableCell>
                             <TableCell align="center">{printMoney(txns.goal.amount)}</TableCell>
                             <TableCell align="center">{printDate(txns.goal.date)}</TableCell>
                         </TableRow>
-                        <TableRow key={`txn key: total`}>
+                        <TableRow
+                            className="bolded-row"
+                            key={`txn key: total`}    
+                        >
                             <TableCell align="center">Total</TableCell>
                             <TableCell align="center">{printMoney(txns.total)}</TableCell>
                             <TableCell align="center">{printDate(null)}</TableCell>
                         </TableRow>
-                        <TableRow key={`txn key: difference`}>
+                        <TableRow
+                            className="bolded-row"
+                            key={`txn key: difference`}
+                        >
                             <TableCell align="center">Difference</TableCell>
                             <TableCell align="center">{printMoney(txns.goal.amount - txns.total)}</TableCell>
                             <TableCell align="center">{printDate(null)}</TableCell>
