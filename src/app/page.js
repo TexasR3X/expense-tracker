@@ -24,6 +24,10 @@ export default function LogIn() {
         setModalType(LOGIN_MODAL_TYPES.SIGN_UP);
     }
 
+    useEffect(() => {
+        logout();
+    }, []);
+
     return (
         <div>
             <h1>Expense Tracker</h1>
