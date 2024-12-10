@@ -5,12 +5,12 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import { TXN_TYPES } from "@/services/database";
 import Money from "./Money";
+import AddGoalButton from "./AddGoalButton";
+import DateDisplay from "./DateDisplay";
 
 
-export default function TxnOverviewCard({ txnCollection, goals }) {
+export default function TxnOverviewCard({ txnCollection }) {
     return (
         <div className="txn-overview-card">
             <h4>Expense Overview</h4>
@@ -20,8 +20,9 @@ export default function TxnOverviewCard({ txnCollection, goals }) {
                     <TableHead>
                         <TableRow>
                             <TableCell align="center">Category</TableCell>
-                            <TableCell align="center">Goal</TableCell>
                             <TableCell align="center">Total</TableCell>
+                            <TableCell align="center">Goal</TableCell>
+                            <TableCell align="center">Due Date</TableCell>
                             {/* <TableCell align="right">Difference</TableCell> */}
                         </TableRow>
                     </TableHead>
@@ -33,10 +34,17 @@ export default function TxnOverviewCard({ txnCollection, goals }) {
                                         {txnGroup.type}
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Money amount={txnGroup.goal}/>
+                                        <Money amount={txnGroup.total}/>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Money amount={txnGroup.total}/>
+                                        <AddGoalButton
+                                            goal={txnGroup.goal}
+                                            // amount={txnGroup.goal.amount}
+                                            // type={txnGroup.type}
+                                        />
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <DateDisplay date={txnGroup.goal.date}/>
                                     </TableCell>
                                 </TableRow>
                             );

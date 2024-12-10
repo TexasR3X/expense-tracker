@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export function sanitizeNum(numStr) {
     numStr = numStr.replace(/\$|,|\s/g, "");
 
@@ -11,11 +13,20 @@ export function sanitizeNum(numStr) {
 }
 
 export function sanitizeStr(str) {
-    const valid = !!str.length;
+    const valid = !/^\s*$/.test(str);
     const result = valid ? str : null;
 
     return {
         valid,
         result,
+    }
+}
+
+export function sanitizeDate(dateStr) {
+    const valid = !!dateStr.length;
+
+    return {
+        valid,
+        result: valid ? Timestamp.fromDate(new Date(`${dateStr}T00:00:00`)) : null,
     }
 }

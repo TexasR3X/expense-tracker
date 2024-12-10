@@ -6,7 +6,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import TxnRow, { TXN_ROW_INPUT_TYPES } from './TxnRow';
 import createRandomID from '@/services/createRandomID';
 import FormModal from './FormModal';
-import { sanitizeNum, sanitizeStr } from '@/services/sanitizeData';
+import { sanitizeDate, sanitizeNum, sanitizeStr } from '@/services/sanitizeData';
 import { Timestamp } from 'firebase/firestore';
 import { Button, Popover, Typography } from '@mui/material';
 
@@ -100,32 +100,40 @@ export default function TxnCard({ txns }) {
                         label: "Amount",
                         // type: "number",
                         // slotProps: { input: { startAdornment: <InputAdornment position="start">$</InputAdornment> } },
-                    }
+                    },
+                    {
+                        label: "Date Spent",
+                        type: "date",
+                        // Force the label to stay above the text field
+                        slotProps: { inputLabel: { shrink: true } },
+                    },
                 ]}
                 submitFn={(inputValues) => {
-                    console.log("inputValues:", inputValues);
-
                     const sanitizedName = sanitizeStr(inputValues[0]);
                     const sanitizedAmount = sanitizeNum(inputValues[1]);
-                    console.log("sanitizedName:", sanitizedName);
-                    console.log("sanitizedAmount:", sanitizedAmount);
+                    const sanitizedDate = sanitizeDate(inputValues[2]);
 
-                    if (sanitizedName.valid && sanitizedAmount.valid) {
-                        console.log("Valid!");
+                    console.log("");
+                    console.log("inputValues[2]:", inputValues[2]);
+                    console.log("typeof inputValues[2]:", typeof inputValues[2]);
+                    console.log("");
 
+                    // Code that runs during a successful submit.
+                    if (sanitizedName.valid && sanitizedAmount.valid && sanitizedDate.valid) {
                         const newTxn = new Txn({
                             name: sanitizedName.result,
                             type: txns.type,
                             amount: sanitizedAmount.result,
-                            date: Timestamp.now(),
+                            date: sanitizedDate.result,
                         });
-
                         newTxn.pushToDB(user);
                     }
 
+                    // Returns which <Textfield>s had errors.
                     return [
                         sanitizedName.valid,
                         sanitizedAmount.valid,
+                        sanitizedDate.valid,
                     ];
                 }}
             />

@@ -1,5 +1,5 @@
 "use client";
-import { collection, addDoc, getDocs, doc, getDoc, setDoc, where, query, getFirestore } from "firebase/firestore";
+import { collection, addDoc, getDocs, doc, getDoc, setDoc, where, query, getFirestore, Timestamp } from "firebase/firestore";
 import { initializeFirebase } from "./firebase";
 import createRandomID from "./createRandomID";
 
@@ -62,12 +62,13 @@ export class TxnCollection {
 
             filteredTxns.type = type;
             console.log("cl goalGroup:", goalGroup);
-            filteredTxns.goal = goalGroup?.getGoal(type)?.amount ?? "none";
+            filteredTxns.goal = goalGroup?.getGoal(type) ?? "none";
 
             this.totals.push(filteredTxns.total);
 
             return filteredTxns;
         });
+        console.log("col this:", this);
     }
 
     getTxnGroup(type) {
@@ -122,15 +123,17 @@ export class Txn {
         this.type = txnData.type;
         this.amount = txnData.amount;
         this.date = txnData.date;
+        this.docID = txnData.docID ?? createRandomID();
     }
 
     async pushToDB(user) {
-        await setDoc(doc(db, "transactions", createRandomID()), {
+        await setDoc(doc(db, "transactions", this.docID), {
             name: this.name,
             type: this.type,
             amount: this.amount,
             date: this.date,
             uid: user.uid,
+            docID: this.docID,
         });
     }
 }
@@ -142,7 +145,13 @@ export class GoalGroup {
     }
 
     getGoal(type) {
-        return this.goals.find((goal) => goal.type === type) ?? null;
+        return this.goals.find((goal) => goal.type === type)
+            ?? new Goal({
+                type,
+                amount: null,
+                date: null,
+                docID: null,
+            });
     }
 }
 
@@ -150,12 +159,19 @@ export class Goal {
     constructor(goalData) {
         this.type = goalData.type;
         this.amount = goalData.amount;
+        this.date = goalData.date;
+        this.docID = goalData.docID ?? createRandomID();
     }
 
     async pushToDB(user) {
-        await setDoc(doc(db, "goals", createRandomID()), {
+        console.log("DB this:", this);
+
+        await setDoc(doc(db, "goals", this.docID), {
             type: this.type,
             amount: this.amount,
+            date: this.date,
+            uid: user.uid,
+            docID: this.docID,
         });
     }
 }
