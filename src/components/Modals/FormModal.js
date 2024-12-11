@@ -6,7 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Modal from "@mui/material/Modal";
 import TextField from "@mui/material/TextField";
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
-import createRandomID from "@/services/createRandomID";
+import createRandomID from "@/util/createRandomID";
 
 const ACTION_TYPES = {
     RESET_VALUES: "RESET_VALUES",

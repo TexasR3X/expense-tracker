@@ -1,12 +1,12 @@
 "use client";
-import { useCallback, useContext, useMemo, useState } from "react";
+import { useContext, useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-import Money from "./Money";
-import FormModal from "./FormModal";
-import { sanitizeDate, sanitizeNum } from "@/services/sanitizeData";
-import { Goal } from "@/services/database";
+import FormModal from "./Modals/FormModal";
+import { sanitizeDate, sanitizeNum } from "@/util/sanitizeData";
+import { Goal } from "@/util/database";
 import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
+import { printMoney } from "@/util/printData";
 
 export default function AddGoalButton({ goal }) {
     const [openModal, setOpenModal] = useState(false);
@@ -35,7 +35,7 @@ export default function AddGoalButton({ goal }) {
             </>
         );
     }
-    else return <Money amount={amount}/>;
+    else return printMoney(amount);
 }
 
 function AddGoalModal({ isOpen, closeModalFn, type, newOrChange = "NEW" }) {

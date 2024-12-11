@@ -7,7 +7,7 @@ import {
   signUpWithEmailAndPassword,
 } from "@/services/firebase";
 import Button from "@mui/material/Button";
-import LoginModal, { LOGIN_MODAL_TYPES } from "@/components/LoginModal";
+import LoginModal, { LOGIN_MODAL_TYPES } from "@/components/Modals/LoginModal";
 import { useRouter } from "next/router";
 
 export default function LogIn() {

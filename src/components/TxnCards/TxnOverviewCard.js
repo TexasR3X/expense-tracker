@@ -5,9 +5,8 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Money from "./Money";
-import AddGoalButton from "./AddGoalButton";
-import DateDisplay from "./DateDisplay";
+import AddGoalButton from "../AddGoalButton";
+import { printDate, printMoney } from "@/util/printData";
 
 
 export default function TxnOverviewCard({ txnCollection }) {
@@ -34,17 +33,13 @@ export default function TxnOverviewCard({ txnCollection }) {
                                         {txnGroup.type}
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Money amount={txnGroup.total}/>
+                                        {printMoney(txnGroup.total)}
                                     </TableCell>
                                     <TableCell align="center">
-                                        <AddGoalButton
-                                            goal={txnGroup.goal}
-                                            // amount={txnGroup.goal.amount}
-                                            // type={txnGroup.type}
-                                        />
+                                        <AddGoalButton goal={txnGroup.goal}/>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <DateDisplay date={txnGroup.goal.date}/>
+                                        {printDate(txnGroup.goal.date)}
                                     </TableCell>
                                 </TableRow>
                             );

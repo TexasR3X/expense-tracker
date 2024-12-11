@@ -2,11 +2,11 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 import { Button, TextField } from "@mui/material";
-import { TXN_TYPES, TxnGroup, GoalGroup, TxnCollection, } from "@/services/database";
-import TxnCard from "@/components/TxnCard";
-import createRandomID from "@/services/createRandomID";
+import { TXN_TYPES, TxnGroup, GoalGroup, TxnCollection, } from "@/util/database";
+import TxnCard from "@/components/TxnCards/TxnCard";
+import createRandomID from "@/util/createRandomID";
 import useDBData from "@/hooks/useDBData";
-import OverViewCard from "@/components/TxnOverviewCard";
+import OverViewCard from "@/components/TxnCards/TxnOverviewCard";
 import { DBCollectionsContext } from "@/contexts/DBCollectionsContext";
 
 export default function Home() {

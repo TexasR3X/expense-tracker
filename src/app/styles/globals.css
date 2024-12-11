@@ -29,7 +29,7 @@ body {
 }
 
 a {
-  color: inherit;
+  color: #1976d2;
   text-decoration: none;
 }
 
@@ -54,7 +54,7 @@ a {
   flex-direction: column;
 }
 
-nav {
+header {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -64,7 +64,7 @@ nav {
   text-align: left;
   padding: 0.5rem;
 }
-nav h2 {
+header h2 {
   flex-grow: 1;
 }
 

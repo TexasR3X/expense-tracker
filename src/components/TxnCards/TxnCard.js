@@ -1,13 +1,10 @@
 "use client";
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useState } from 'react';
 import { FirebaseAuthContext } from '@/contexts/FirebaseAuthContext';
-import { Txn } from '@/services/database';
+import { Txn } from '@/util/database';
 import MenuIcon from '@mui/icons-material/Menu';
-import TxnRow, { TXN_ROW_INPUT_TYPES } from './TxnRow';
-import createRandomID from '@/services/createRandomID';
-import FormModal from './FormModal';
-import { sanitizeDate, sanitizeNum, sanitizeStr } from '@/services/sanitizeData';
-import { Timestamp } from 'firebase/firestore';
+import FormModal from '../Modals/FormModal';
+import { sanitizeDate, sanitizeNum, sanitizeStr } from '@/util/sanitizeData';
 import { Button, Popover, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import { printDate, printMoney } from '@/util/printData';
 
@@ -42,13 +39,13 @@ export default function TxnCard({ txns }) {
                     aria-describedby="popover"
                 />
                 <Popover
-                    id="popover"
+                    id="add-txn-popover"
                     open={!!popOverAnchor}
                     anchorEl={popOverAnchor}
                     onClose={() => setPopOverAnchor(null)}
                     anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
+                        vertical: "bottom",
+                        horizontal: "right",
                     }}
                 >
                     <Typography sx={{ p: 2 }}>
@@ -93,7 +90,7 @@ export default function TxnCard({ txns }) {
                         >
                             <TableCell align="center">Total</TableCell>
                             <TableCell align="center">{printMoney(txns.total)}</TableCell>
-                            <TableCell align="center">{printDate(null)}</TableCell>
+                            <TableCell align="center">none</TableCell>
                         </TableRow>
                         <TableRow
                             className="bolded-row"
@@ -101,37 +98,11 @@ export default function TxnCard({ txns }) {
                         >
                             <TableCell align="center">Difference</TableCell>
                             <TableCell align="center">{printMoney(txns.goal.amount - txns.total)}</TableCell>
-                            <TableCell align="center">{printDate(null)}</TableCell>
+                            <TableCell align="center">none</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>
-
-            {/* <div>
-                {txns.map((txn) => (
-                    <TxnRow
-                        data={txn}
-                        inputType={TXN_ROW_INPUT_TYPES.TXN}
-                        key={createRandomID()}
-                    />
-                ))}
-                <TxnRow
-                    data={{ amount: txns.goal.amount }}
-                    inputType={TXN_ROW_INPUT_TYPES.GOAL}
-                    key={createRandomID()}
-                />
-                <TxnRow
-                    data={{ amount: txns.total }}
-                    inputType={TXN_ROW_INPUT_TYPES.TOTAL}
-                    key={createRandomID()}
-                />
-                <TxnRow
-                    data={{ amount: txns.goal.amount - txns.total }}
-                    inputType={TXN_ROW_INPUT_TYPES.DIFFERENCE}
-                    key={createRandomID()}
-                />
-            </div> */}
-
 
             <FormModal
                 heading={`Add New ${txns.type} Transaction`}
