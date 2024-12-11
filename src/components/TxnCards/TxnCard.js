@@ -130,11 +130,6 @@ export default function TxnCard({ txns }) {
                     const sanitizedAmount = sanitizeNum(inputValues[1]);
                     const sanitizedDate = sanitizeDate(inputValues[2]);
 
-                    console.log("");
-                    console.log("inputValues[2]:", inputValues[2]);
-                    console.log("typeof inputValues[2]:", typeof inputValues[2]);
-                    console.log("");
-
                     // Code that runs during a successful submit.
                     if (sanitizedName.valid && sanitizedAmount.valid && sanitizedDate.valid) {
                         const newTxn = new Txn({

@@ -1,5 +1,5 @@
 "use client";
-import { collection, addDoc, getDocs, doc, getDoc, setDoc, where, query, getFirestore, Timestamp } from "firebase/firestore";
+import { collection, getDocs, doc, setDoc, where, query, getFirestore } from "firebase/firestore";
 import { initializeFirebase } from "../services/firebase";
 import createRandomID from "./createRandomID";
 
@@ -61,14 +61,12 @@ export class TxnCollection {
             const filteredTxns = allTxns.filterByType(type);
 
             filteredTxns.type = type;
-            console.log("cl goalGroup:", goalGroup);
             filteredTxns.goal = goalGroup?.getGoal(type) ?? "none";
 
             this.totals.push(filteredTxns.total);
 
             return filteredTxns;
         });
-        console.log("col this:", this);
     }
 
     getTxnGroup(type) {
@@ -101,17 +99,9 @@ export class TxnGroup {
         this.total = fixNum(this.txns.reduce((accumulator, currentTxn) => accumulator + currentTxn.amount, 0));
     }
 
-    // filter(callback) {
-    //     return new TxnGroup(this.txns.filter(callback));
-    // }
     filterByType(type) {
         return new TxnGroup(this.txns.filter((txn) => txn.type === type));
     }
-    // sortByTypes() {
-    //     TXN_TYPES.map((type) => {
-
-    //     });
-    // }
     map(callback) {
         return this.txns.map(callback);
     }
@@ -164,8 +154,6 @@ export class Goal {
     }
 
     async pushToDB(user) {
-        console.log("DB this:", this);
-
         await setDoc(doc(db, "goals", this.docID), {
             type: this.type,
             amount: this.amount,

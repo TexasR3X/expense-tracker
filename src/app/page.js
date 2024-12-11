@@ -1,14 +1,8 @@
 "use client";
-import { useCallback, useContext, useEffect, useReducer, useState } from "react";
-import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
-import {
-  logInWithEmailAndPassword,
-  logout,
-  signUpWithEmailAndPassword,
-} from "@/services/firebase";
+import { useEffect, useState } from "react";
+import { logout } from "@/services/firebase";
 import Button from "@mui/material/Button";
 import LoginModal, { LOGIN_MODAL_TYPES } from "@/components/Modals/LoginModal";
-import { useRouter } from "next/router";
 
 export default function LogIn() {
     // const user = useContext(FirebaseAuthContext);

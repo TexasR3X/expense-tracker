@@ -1,10 +1,10 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
-import { db, TxnGroup } from "@/util/database";
+import { db } from "@/util/database";
 import { FirebaseAuthContext } from "@/contexts/FirebaseAuthContext";
 
-export default function useDBData(collectionID, classType, otherData = "NONE") {
+export default function useDBData(collectionID, classType, otherData = null) {
     const user = useContext(FirebaseAuthContext);
 
     const [data, setData] = useState(null);

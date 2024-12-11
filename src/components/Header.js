@@ -11,11 +11,8 @@ export default function Header() {
     const [popOverAnchor, setPopOverAnchor] = useState(null);
 
     const handleAvatarClick = (event) => {
-        console.log("event.currentTarget:", event.currentTarget);
         setPopOverAnchor(event.currentTarget);
     }
-
-    console.log("popOverAnchor:", popOverAnchor);
 
     return (
         <header>

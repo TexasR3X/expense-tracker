@@ -10,11 +10,6 @@ export default function Layout({ children }) {
     const user = useContext(FirebaseAuthContext);
     const txnCollection = useContext(DBCollectionsContext);
 
-    // const txnCollection = useDBData(user, "transactions", TxnCollection);
-    // const goalGroup = useDBData(user, "goals", GoalGroup);
-
-    console.log("!user || !txnCollection:", !user || !txnCollection);
-
     return (
         <div>
             <Header/>
