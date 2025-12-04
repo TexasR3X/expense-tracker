@@ -15,7 +15,7 @@
     "@mui/material": "^6.1.8",
     "@mui/styled-engine-sc": "^6.1.7",
     "firebase": "^11.0.2",
-    "next": "15.0.3",
+    "next": "^15.5.7",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "styled-components": "^6.1.13"
